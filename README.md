@@ -24,7 +24,7 @@
   * 매출액증가율 / 영업이익증가율 / 외국인비율 / 유보율
   * PER / ROE / ROA / PBR
 - 비동기 메서드 지원 `StockLoader.Instance.LoadAsync().Wait();`
-- 종목명과 종목코드가 저장된 클래스를 생성할 수 있습니다. ([생성된 코드의 예](../blob/main/Kosdas/Stock.constant.cs))
+- 종목명과 종목코드가 저장된 클래스를 생성할 수 있습니다. ([생성된 코드의 예](/blob/main/Kosdas/Stock.constant.cs))
 ```csharp
 StockLoader.Instance.Load();
 StockLoader.Instance.Generate(@"C:\git\KoreanStockLibrary\KoreanStockLibrary\Stock.constant.cs", "KoreanStockLibrary", "Stock");
@@ -86,7 +86,7 @@ Assert.AreEqual(7M, stock.ConsensusCount);
 var stocks = StockLoader.Instance.ToList();
 stocks.AsParallel().ForAll(x => x.LoadConsensus());
 ```
-- 완전한 사용 방법은 [단위 테스트 코드](../blob/main/Kosdas.UnitTestProject/StockLoaderTests.cs)에서 확인할 수 있습니다.
+- 완전한 사용 방법은 [단위 테스트 코드](/blob/main/Kosdas.UnitTestProject/StockLoaderTests.cs)에서 확인할 수 있습니다.
 
 ## 가격 정보 - PriceLoader
 - 특정 종목의 특정 기간 동안의 일별 가격 정보를 불러옵니다.
@@ -138,7 +138,7 @@ Assert.AreEqual(23025766, prices[3].Volume);
 ```csharp
 ```
 
-- 완전한 사용 방법은 [단위 테스트 코드](../blob/main/Kosdas.UnitTestProject/PriceLoaderTests.cs)에서 확인할 수 있습니다.
+- 완전한 사용 방법은 [단위 테스트 코드](/blob/main/Kosdas.UnitTestProject/PriceLoaderTests.cs)에서 확인할 수 있습니다.
 
 
 ## 실시간 전종목 시세 - RealTimePriceLoader
