@@ -1,2 +1,184 @@
-# Kosdas
-í•œêµ­ ì£¼ì‹ ë°ì´í„° ìŠ¤í¬ë˜í¼
+# ÇÑ±¹ ÁÖ½Ä µ¥ÀÌÅÍ ½ºÅ©·¡ÆÛ
+
+ÇÑ±¹ ÁÖ½Ä°ú °ü·ÃµÈ °¢Á¾ µ¥ÀÌÅÍ¸¦ ½ºÅ©·¡ÇÎÇÏ´Â ÇÕ´Ï´Ù.
+
+---------------------------------------
+
+## ±â´É
+- Á¾¸ñ Á¤º¸
+- ½Ç½Ã°£ °¡°İ Á¤º¸
+- °¡°İ Á¤º¸
+- .Net Standard 2.0À» Áö¿ø
+- º´·Ä LINQ·Î ±¸ÇöÇÏ¿© ½ÇÇà ¼Óµµ°¡ ºü¸§
+- ¸ğµç ¸Ş¼­µå¿¡ ´ëÇØ °¢°¢ µ¿±â¿Í ºñµ¿±â ¹öÀü Á¦°ø
+
+## Á¾¸ñ Á¤º¸ - StockLoader
+- [³×ÀÌ¹ö ±İÀ¶](https://finance.naver.com/sise/sise_market_sum.nhn?sosok=0)¿¡ ÀÖ´Â ¸ğµç Á¾¸ñÀÇ Á¤º¸¸¦ ±¸ÇÕ´Ï´Ù.
+- °¢ Á¾¸ñ ´ç 23°¡ÁöÀÇ Á¤º¸¸¦ °¡Áö°í ºÒ·¯¿É´Ï´Ù.
+  * Á¾¸ñÄÚµå / Á¾¸ñ¸í / ½ÃÀå±¸ºĞ / °Å·¡·® / ½Ã°¡ / °í°¡ / Àú°¡
+  * ½Ã°¡ÃÑ¾× / ¸ÅÃâ¾× / ÀÚ»êÃÑ°è / ºÎÃ¤ÃÑ°è
+  * ¿µ¾÷ÀÌÀÍ / ´ç±â¼øÀÌÀÍ / ÁÖ´ç¼øÀÌÀÍ / º¸ÅëÁÖ¹è´ç±İ
+  * ¸ÅÃâ¾×Áõ°¡À² / ¿µ¾÷ÀÌÀÍÁõ°¡À² / ¿Ü±¹ÀÎºñÀ² / À¯º¸À²
+  * PER / ROE / ROA / PBR
+- ºñµ¿±â ¸Ş¼­µå Áö¿ø `StockLoader.Instance.LoadAsync().Wait();`
+- Á¾¸ñ¸í°ú Á¾¸ñÄÚµå°¡ ÀúÀåµÈ Å¬·¡½º¸¦ »ı¼ºÇÒ ¼ö ÀÖ½À´Ï´Ù. ([»ı¼ºµÈ ÄÚµåÀÇ ¿¹](https://github.com/cplkimth/KoreanStockLibrary/blob/main/KoreanStockLibrary/Stock.cs))
+```csharp
+StockLoader.Instance.Load();
+StockLoader.Instance.Generate(@"C:\git\KoreanStockLibrary\KoreanStockLibrary\Stock.constant.cs", "KoreanStockLibrary", "Stock");
+```
+- µÎ °³ÀÇ ÀÌº¥Æ®¸¦ Á¦°øÇÕ´Ï´Ù.
+  * `ProgressChanged` Load ¸Ş¼­µåÀÇ ÁøÇà»óÈ²ÀÌ º¯°æµÉ ¶§ ¹ß»ı
+  * ÁøÇà»óÈ²À» ÇÁ·Î±×·¡½º ¹Ù¿¡ Ç¥½ÃÇÏ´Â ¿¹. ºñµ¿±â·Î È£ÃâÇÏ´Â °æ¿ì¿¡´Â Å©·Î½º ¾²·¹µå ¹®Á¦¸¦ ÇÇÇÏ±â À§ÇØ Invoke ¸Ş¼­µå¸¦ »ç¿ë.
+```csharp
+protected override void OnLoad(EventArgs e)
+{
+    StockLoader.Instance.ProgressChanged += StockLoader_ProgressChanged;
+}
+
+private void StockLoader_ProgressChanged(object sender, StockLoader.ProgressChangedEventArgs e)
+{
+    prbProgress.Invoke(new Action(() => prbProgress.Value = (int) e.Percent));
+}
+```
+  * `RequestSending` ÆäÀÌÁö ½ºÅ©·¡ÇÎÀ» ÇÏ±â Àü¿¡ ¹ß»ı. ÀÌº¥Æ® ÇÚµé·¯¿¡¼­ Æ¯Á¤ Á¶°ÇÀÇ ÆäÀÌÁö ½ºÅ©·¡ÇÎÀ» °Ç³Ê¶ç´Â µ¥ »ç¿ë
+  * ÄÚ½º´Ú Á¾¸ñÀº °Ç³Ê¶ç´Â ¿¹
+```csharp
+protected override void OnLoad(EventArgs e)
+{
+    StockLoader.Instance.RequestSending += StockLoader_RequestSending;
+}
+
+private void StockLoader_RequestSending(object sender, StockLoader.RequestSendingEventArgs e)
+{
+    if (e.Market == Market.KQ)
+        e.Cancel = true;
+}
+```
+- º´·Ä LINQ·Î ±¸ÇöÇÏ¿© ÀüÁ¾¸ñÀÇ Á¤º¸¸¦ ¼ö ÃÊ ¾È¿¡ ºÒ·¯¿Ã ¼ö ÀÖ½À´Ï´Ù.
+- ¾Æ·¡ `PriceLoader` Å¬·¡½º¿Í ¿¬µ¿ÇØ ¾µ ¼ö ÀÖ´Â È®Àå ¸Ş¼­µå°¡ Á¦°øµË´Ï´Ù.
+  * »ï¼ºÀüÀÚÀÇ 2021³â 2¿ù 16ÀÏÀÇ ½Ã°¡/°í°¡/Àú°¡/Á¾°¡/°Å·¡·®À» ±¸ÇÏ´Â ÄÚµåÀÇ ¿¹
+```csharp
+var price = StockLoader.Instance[Stock.»ï¼ºÀüÀÚ].LoadPrice(2021, 2, 16);
+
+Assert.AreEqual(new DateTime(2021, 2, 16), price.Date);
+Assert.AreEqual(84500, price.Open);
+Assert.AreEqual(86000, price.High);
+Assert.AreEqual(84200, price.Low);
+Assert.AreEqual(84900, price.Close);
+Assert.AreEqual(20373346, price.Volume);
+```
+- Á¾¸ñº° ÄÁ¼¾¼­½º Á¤º¸¸¦ ºÒ·¯¿Ã ¼ö ÀÖ½À´Ï´Ù.
+  * [³×ÀÌ¹ö ±İÀ¶](https://finance.naver.com/item/coinfo.nhn?code=005930)ÀÇ Á¾¸ñº° ÄÁ¼¾¼­½º¸¦ ºÒ·¯¿É´Ï´Ù.  
+  * ¸Ş¸®Ã÷ Áõ±ÇÀÇ ÄÁ¼¾¼­½º¸¦ ºÒ·¯¿À´Â ÄÚµåÀÇ ¿¹
+```csharp
+var stock = StockLoader.Instance[Stock.¸Ş¸®Ã÷Áõ±Ç];
+stock.LoadConsensus();
+
+Assert.AreEqual(3.71M, stock.Consensus);
+Assert.AreEqual(4443M, stock.TargetPrice);
+Assert.AreEqual(7M, stock.ConsensusCount);
+```
+- Àü Á¾¸ñÀÇ ÄÁ¼¾¼­½º¸¦ º´·Ä·Î ºÒ·¯¿Ã ¼ö ÀÖ½À´Ï´Ù.
+```csharp
+var stocks = StockLoader.Instance.ToList();
+stocks.AsParallel().ForAll(x => x.LoadConsensus());
+```
+- ¿ÏÀüÇÑ »ç¿ë ¹æ¹ıÀº [´ÜÀ§ Å×½ºÆ® ÄÚµå](https://github.com/cplkimth/KoreanStockLibrary/blob/main/KoreanStockLibrary.UnitTestProject/StockLoaderTests.cs)¿¡¼­ È®ÀÎÇÒ ¼ö ÀÖ½À´Ï´Ù.
+
+## °¡°İ Á¤º¸ - PriceLoader
+- Æ¯Á¤ Á¾¸ñÀÇ Æ¯Á¤ ±â°£ µ¿¾ÈÀÇ ÀÏº° °¡°İ Á¤º¸¸¦ ºÒ·¯¿É´Ï´Ù.
+- °¡°İ Á¤º¸¿¡´Â ¾Æ·¡ Ç×¸ñÀÌ Æ÷ÇÔµÇ¾î ÀÖ½À´Ï´Ù.
+  * ÀÏÀÚ / ½Ã°¡ / °í°¡ / Àú°¡ / Á¾°¡ / °Å·¡·®
+- »ï¼ºÀüÀÚÀÇ ÃÖ±Ù 2ÀÏ °£ÀÇ °¡°İ Á¤º¸¸¦ °¡Á®¿À´Â ÄÚµåÀÇ ¿¹
+```csharp
+var prices = PriceLoader.Instance.Load("005930", 2).ToList();
+
+Assert.AreEqual(2, prices.Count);
+Assert.AreEqual(new DateTime(2021, 2, 15), prices[0].Date);
+Assert.AreEqual(new DateTime(2021, 2, 16), prices[1].Date);
+Assert.AreEqual(83800, prices[0].Open);
+Assert.AreEqual(84500, prices[0].High);
+Assert.AreEqual(83300, prices[0].Low);
+Assert.AreEqual(84200, prices[0].Close);
+Assert.AreEqual(23529706, prices[0].Volume);
+Assert.AreEqual(84500, prices[1].Open);
+Assert.AreEqual(86000, prices[1].High);
+Assert.AreEqual(84200, prices[1].Low);
+Assert.AreEqual(84900, prices[1].Close);
+Assert.AreEqual(20373346, prices[1].Volume);
+```
+- »ï¼ºÀüÀÚÀÇ 2021³â 2¿ù 16ÀÏÀÇ °¡°İ Á¤º¸¸¦ °¡Á®¿À´Â ÄÚµåÀÇ ¿¹
+```csharp
+var price = PriceLoader.Instance.Load("005930", 2021, 2, 16);
+
+Assert.AreEqual(new DateTime(2021, 2, 16), price.Date);
+Assert.AreEqual(84500, price.Open);
+Assert.AreEqual(86000, price.High);
+Assert.AreEqual(84200, price.Low);
+Assert.AreEqual(84900, price.Close);
+Assert.AreEqual(20483100, price.Volume);
+```
+- »ï¼ºÀüÀÚÀÇ 2021³â 2¿ù 5ÀÏ ºÎÅÍ 2021³â 2¿ù 13ÀÏ »çÀÌÀÇ °¡°İ Á¤º¸¸¦ °¡Á®¿À´Â ÄÚµåÀÇ ¿¹ (2021³â 2¿ù 13ÀÏ ½ÃÁ¡¿¡¼­ÀÇ ÃÖ±Ù°¡°İÀº 2021³â 2¿ù 10ÀÏ)
+```csharp
+var prices = PriceLoader.Instance.Load("005930", new DateTime(2021, 2, 5), new DateTime(2021, 2, 13)).ToList();
+
+Assert.AreEqual(4, prices.Count);
+Assert.AreEqual(new DateTime(2021, 2, 5), prices[0].Date);
+Assert.AreEqual(new DateTime(2021, 2, 10), prices[^1].Date);
+Assert.AreEqual(82500, prices[0].Low);
+Assert.AreEqual(84200, prices[1].High);
+Assert.AreEqual(84000, prices[2].Open);
+Assert.AreEqual(81600, prices[3].Close);
+Assert.AreEqual(23025766, prices[3].Volume);
+```
+- »ï¼ºÀüÀÚÀÇ ÃÖ±Ù 2ÀÏ °£ÀÇ °¡°İ Á¤º¸¸¦ °¡Á®¿À´Â ÄÚµåÀÇ ¿¹
+```csharp
+```
+
+- ¿ÏÀüÇÑ »ç¿ë ¹æ¹ıÀº [´ÜÀ§ Å×½ºÆ® ÄÚµå](https://github.com/cplkimth/KoreanStockLibrary/blob/main/KoreanStockLibrary.UnitTestProject/PriceLoaderTests.cs)¿¡¼­ È®ÀÎÇÒ ¼ö ÀÖ½À´Ï´Ù.
+
+
+## ½Ç½Ã°£ ÀüÁ¾¸ñ ½Ã¼¼ - RealTimePriceLoader
+- 20ºĞ Áö¿¬ ¾ø´Â ½Ç½Ã°£ ÀüÁ¾¸ñ ½Ã¼¼¸¦ ºÒ·¯¿É´Ï´Ù.
+  * Àü Á¾¸ñÀÇ ½Ç½Ã°£ ½Ã¼¼¸¦ ÄÜ¼Ö¿¡ Ãâ·ÂÇÏ´Â ÄÚµåÀÇ ¿¹
+```csharp
+RealTimePriceLoader.Instance.Load();
+foreach (var stock in StockLoader.Instance)
+    Console.WriteLine(RealTimePriceLoader.Instance[stock.Code]);
+```
+- º´·Ä ÄÚµå·Î ÀÛ¼ºµÇ¾î ¼ö ÃÊ ¾È¿¡ Àü Á¾¸ñÀÇ ½Ç½Ã°£ ½Ã¼¼¸¦ ºÒ·¯¿Ã ¼ö ÀÖ½À´Ï´Ù.
+
+## È°¿ë ¿¹½Ã
+- À§ Å¬·¡½ºµéÀ» °áÇÕÇÏ¿© ¾Æ·¡¿Í °°Àº ÀÏÀ» ÇÒ ¼ö ÀÖ½À´Ï´Ù.
+- ÃßÃµ ·¹Æ÷Æ®°¡ 10°³ ÀÌ»óÀÌ°í ÅõÀÚÀÇ°ßÀÌ 4.0 ÀÌ»óÀÎ Á¾¸ñÀ» (ÇöÀç°¡/¸ñÇ¥ÁÖ°¡) ¼øÀ¸·Î Á¤·ÄÇÑ ÈÄ »óÀ§ 10°³ Á¾¸ñÀ» Ãâ·ÂÇÏ´Â ¿¹
+```csharp
+// Àü Á¾¸ñÀÇ Á¤º¸¸¦ ±¸ÇÑ´Ù.
+StockLoader.Instance.Load();
+var stocks = StockLoader.Instance.ToList();
+            
+// Àü Á¾¸ñÀÇ ÄÁ¼¾¼­½º¸¦ ±¸ÇÑ´Ù.
+stocks.AsParallel().ForAll(x => x.LoadConsensus());
+            
+// Àü Á¾¸ñÀÇ ½Ç½Ã°£ ½Ã¼¼¸¦ ±¸ÇÑ´Ù.
+RealTimePriceLoader.Instance.Load();
+
+var query = from x in stocks
+    // ÃßÃµ ·¹Æ÷Æ®°¡ 10°³ ÀÌ»óÀÌ°í ÅõÀÚÀÇ°ßÀÌ 4.0 ÀÌ»óÀÎ Á¾¸ñÀ» ÇÊÅÍ¸µ
+    where x.ConsensusCount > 10 && x.Consensus >= 4.0M
+    // (ÇöÀç°¡/¸ñÇ¥ÁÖ°¡) ¼øÀ¸·Î Á¤·Ä
+    orderby x.CloseOfTarget
+    select x;
+
+// ¸ñ·Ï Áß ¾Õ¿¡¼­ 10°³¸¦ ¹İÈ¯
+var list = query.Take(10).ToList();
+
+foreach (var stock in list)
+{
+    // Á¾¸ñÄÚµå / Á¾¸ñ¸í / ÅõÀÚÀÇ°ß / ·¹Æ÷Æ®¼ö / ¸ñÇ¥ÁÖ°¡ / (ÇöÀç°¡/¸ñÇ¥ÁÖ°¡)
+    Console.WriteLine($"{stock.Code}\t{stock.Name}\t{stock.Consensus:N2}\t{stock.ConsensusCount}\t{stock.TargetPrice:N0}\t{stock.CloseOfTarget:P2}");
+}
+```
+
+## ÁÖÀÇ
+- º» ¶óÀÌºê·¯¸®´Â Æ÷ÅĞ »çÀÌÆ® µî¿¡ °ø°³µÇ¾î ÀÖ´Â Á¤º¸¸¦ ÀĞ¾î¿À´Â ¿ªÇÒÀ» ÇÕ´Ï´Ù.
+- º» ¶óÀÌºê·¯¸®´Â ¿ÀÇÂ ¼Ò½º·Î °ø°³µÇ´Â °ÍÀÌ¸ç, º» ¶óÀÌºê·¯¸® »ç¿ëÀ¸·Î ÀÎÇØ ¹ß»ıÇÒ ¼ö ÀÖ´Â ¾î¶² ÇÇÇØ¿¡ ´ëÇØ¼­µµ °³¹ßÀÚ´Â Ã¥ÀÓÀ» ÁöÁö ¾ÊÀ¸´Ï, **º»ÀÎÀÇ ½ÅÁßÇÑ ÆÇ´Ü** ÈÄ¿¡ »ç¿ëÇÏ½Ê½Ã¿À.
