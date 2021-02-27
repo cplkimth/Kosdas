@@ -3,6 +3,9 @@
 한국 주식과 관련된 각종 데이터를 스크래핑하는 합니다.
 
 ---------------------------------------
+## 주의
+- 본 라이브러리는 단순히 포털 사이트 등에 공개되어 있는 정보를 읽어오는 역할을 합니다.
+- 본 라이브러리 사용으로 인해 발생할 수 있는 어떤 피해에 대해서도 개발자는 책임을 질 수 없으니, **본인의 신중한 판단** 후에 사용하십시오.
 
 ## 기능
 - 종목 정보
@@ -21,7 +24,7 @@
   * 매출액증가율 / 영업이익증가율 / 외국인비율 / 유보율
   * PER / ROE / ROA / PBR
 - 비동기 메서드 지원 `StockLoader.Instance.LoadAsync().Wait();`
-- 종목명과 종목코드가 저장된 클래스를 생성할 수 있습니다. ([생성된 코드의 예](https://github.com/cplkimth/KoreanStockLibrary/blob/main/KoreanStockLibrary/Stock.cs))
+- 종목명과 종목코드가 저장된 클래스를 생성할 수 있습니다. ([생성된 코드의 예](../blob/main/Kosdas/Stock.constant.cs))
 ```csharp
 StockLoader.Instance.Load();
 StockLoader.Instance.Generate(@"C:\git\KoreanStockLibrary\KoreanStockLibrary\Stock.constant.cs", "KoreanStockLibrary", "Stock");
@@ -83,7 +86,7 @@ Assert.AreEqual(7M, stock.ConsensusCount);
 var stocks = StockLoader.Instance.ToList();
 stocks.AsParallel().ForAll(x => x.LoadConsensus());
 ```
-- 완전한 사용 방법은 [단위 테스트 코드](https://github.com/cplkimth/KoreanStockLibrary/blob/main/KoreanStockLibrary.UnitTestProject/StockLoaderTests.cs)에서 확인할 수 있습니다.
+- 완전한 사용 방법은 [단위 테스트 코드](../blob/main/Kosdas.UnitTestProject/StockLoaderTests.cs)에서 확인할 수 있습니다.
 
 ## 가격 정보 - PriceLoader
 - 특정 종목의 특정 기간 동안의 일별 가격 정보를 불러옵니다.
@@ -135,7 +138,7 @@ Assert.AreEqual(23025766, prices[3].Volume);
 ```csharp
 ```
 
-- 완전한 사용 방법은 [단위 테스트 코드](https://github.com/cplkimth/KoreanStockLibrary/blob/main/KoreanStockLibrary.UnitTestProject/PriceLoaderTests.cs)에서 확인할 수 있습니다.
+- 완전한 사용 방법은 [단위 테스트 코드](../blob/main/Kosdas.UnitTestProject/PriceLoaderTests.cs)에서 확인할 수 있습니다.
 
 
 ## 실시간 전종목 시세 - RealTimePriceLoader
@@ -178,7 +181,3 @@ foreach (var stock in list)
     Console.WriteLine($"{stock.Code}\t{stock.Name}\t{stock.Consensus:N2}\t{stock.ConsensusCount}\t{stock.TargetPrice:N0}\t{stock.CloseOfTarget:P2}");
 }
 ```
-
-## 주의
-- 본 라이브러리는 포털 사이트 등에 공개되어 있는 정보를 읽어오는 역할을 합니다.
-- 본 라이브러리는 오픈 소스로 공개되는 것이며, 본 라이브러리 사용으로 인해 발생할 수 있는 어떤 피해에 대해서도 개발자는 책임을 지지 않으니, **본인의 신중한 판단** 후에 사용하십시오.
