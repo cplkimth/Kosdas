@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -8,6 +9,8 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using AsyncMethodLibrary;
+using Kosdas.Models;
+using Newtonsoft.Json;
 
 namespace Kosdas.TestConsole
 {
@@ -20,7 +23,22 @@ namespace Kosdas.TestConsole
             // Example();
             // return;
 
-            FindRecommended();
+            // WriteStockCodes();
+            // FindRecommended();
+        }
+
+        private static void WriteStockCodes()
+        {
+            StockLoader.Instance.Load();
+
+            ConcurrentDictionary<string, Stock> dictionary = new ConcurrentDictionary<string, Stock>();
+
+            foreach (var stock in StockLoader.Instance)
+                dictionary.TryAdd(stock.Code, stock);
+
+            var json = JsonConvert.SerializeObject(dictionary);
+
+            File.WriteAllText(@"C:\Users\thkim\Desktop\stocks.json", json);
         }
 
         private static void FindRecommended()
@@ -59,7 +77,7 @@ namespace Kosdas.TestConsole
 
         private static void GenerateAsyncWrapper()
         {
-            Generator.Generate(@"C:\git\Kosdas\Kosdas\generated", typeof(StockExtension), typeof(PriceLoader));
+            Generator.Generate(@"C:\git\Kosdas\Kosdas\generated", typeof(Extensions.StockExtension), typeof(PriceLoader));
         }
 
         private static void Example()

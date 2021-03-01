@@ -1,6 +1,7 @@
 ﻿#region
 using System;
 using System.Linq;
+using Kosdas.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 #endregion
 
@@ -12,7 +13,7 @@ namespace Kosdas.UnitTest
         [TestMethod()]
         public void 시작일과_종료일을_지정()
         {
-            var prices = PriceLoader.Instance.Load("005930", new DateTime(2021, 2, 5), new DateTime(2021, 2, 13)).ToList();
+            var prices = PriceLoader.Yahoo.Load("005930", new DateTime(2021, 2, 5), new DateTime(2021, 2, 13)).ToList();
 
             Assert.AreEqual(4, prices.Count);
             Assert.AreEqual(new DateTime(2021, 2, 5), prices[0].Date);
@@ -33,7 +34,7 @@ namespace Kosdas.UnitTest
                 return;
             }
 
-            var prices = PriceLoader.Instance.Load("005930", 2).ToList();
+            var prices = PriceLoader.Yahoo.Load("005930", 2).ToList();
 
             Assert.AreEqual(2, prices.Count);
             Assert.AreEqual(new DateTime(2021, 2, 15), prices[0].Date);
@@ -53,7 +54,7 @@ namespace Kosdas.UnitTest
         [TestMethod()]
         public void 특정일()
         {
-            var price = PriceLoader.Instance.Load("005930", 2021, 2, 16);
+            var price = PriceLoader.Yahoo.Load("005930", 2021, 2, 16);
 
             Assert.AreEqual(new DateTime(2021, 2, 16), price.Date);
             Assert.AreEqual(84500, price.Open);
@@ -66,9 +67,33 @@ namespace Kosdas.UnitTest
         [TestMethod()]
         public void 존재하지_않는_날짜()
         {
-            var price = PriceLoader.Instance.Load("005930", 2099, 1, 1);
+            var price = PriceLoader.Yahoo.Load("005930", 2099, 1, 1);
 
             Assert.IsNull(price);
+        }
+
+        [TestMethod()]
+        public void 야후금융에서_코스닥_가격정보_가져오기()
+        {
+            var price = PriceLoader.Yahoo.Load(Stock.아이퀘스트, 2021, 2, 26);
+
+            Assert.AreEqual(new DateTime(2021, 2, 26), price.Date);
+            Assert.AreEqual(17500, price.Open);
+            Assert.AreEqual(17750, price.High);
+            Assert.AreEqual(16350, price.Low);
+            Assert.AreEqual(16500, price.Close);
+            Assert.AreEqual(226443, price.Volume);
+        }
+
+        [TestMethod()]
+        public void 수정주가를_반영하여야_함()
+        {
+            var prices = PriceLoader.Yahoo.Load(Stock.삼성전자, new DateTime(2018,5,3), new DateTime(2018,5,4)).ToList();
+
+            Assert.AreEqual(53000, prices[0].Open);
+            Assert.AreEqual(53000, prices[0].Close);
+            Assert.AreEqual(53000, prices[1].Open);
+            Assert.AreEqual(51900, prices[1].Close);
         }
     }
 }

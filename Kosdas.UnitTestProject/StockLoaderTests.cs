@@ -1,5 +1,6 @@
 ﻿#region
 using System;
+using Kosdas.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 #endregion
 
@@ -53,7 +54,7 @@ namespace Kosdas.UnitTest
         [TestMethod()]
         public void StockExtension을_사용하여_특정일의_가격을_가져옮()
         {
-            var price = StockLoader.Instance[Stock.삼성전자].LoadPrice(2021, 2, 16);
+            var price = StockLoader.Instance[Models.Stock.삼성전자].LoadPrice(2021, 2, 16);
 
             Assert.AreEqual(new DateTime(2021, 2, 16), price.Date);
             Assert.AreEqual(84500, price.Open);
@@ -72,7 +73,7 @@ namespace Kosdas.UnitTest
                 return;
             }
 
-            var stock = StockLoader.Instance[Stock.메리츠증권];
+            var stock = StockLoader.Instance[Models.Stock.메리츠증권];
             stock.LoadConsensus();
 
             Assert.AreEqual(3.71M, stock.Consensus);

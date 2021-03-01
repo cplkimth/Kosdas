@@ -7,6 +7,15 @@
 - 본 라이브러리는 단순히 포털 사이트 등에 공개되어 있는 정보를 읽어오는 역할을 합니다.
 - 본 라이브러리 사용으로 인해 발생할 수 있는 어떤 피해에 대해서도 개발자는 책임을 질 수 없으니, **본인의 신중한 판단** 후에 사용하십시오.
 
+## 1.1 새 기능
+- PriceLoader
+  * `PriceLoader.Naver` 추가 : 네이버 금융에서 데이터 가져오기
+  * `PriceLoader.Yahoo` 추가 : 야후 금융에서 데이터 가져오기
+  * `PriceLoader.Instance` : `PriceLoader.Yahoo`와 동일
+  * `PriceLoader.Yahoo` 사용시 전세계 주식 데이터 스크래핑 가능
+- StockLoader
+  * `StockLoader.Load()` 호출할 필요 없음 : 2021/3/1 시점에서의 데이터 내장. `StockLoader.Load()`를 호출하면 실시간 종목정보로 갱신 가능.
+
 ## 기능
 - 종목 정보
 - 실시간 가격 정보
@@ -30,8 +39,8 @@ StockLoader.Instance.Load();
 StockLoader.Instance.Generate(@"C:\git\KoreanStockLibrary\KoreanStockLibrary\Stock.constant.cs", "KoreanStockLibrary", "Stock");
 ```
 - 두 개의 이벤트를 제공합니다.
-  * `ProgressChanged` Load 메서드의 진행상황이 변경될 때 발생
-  * 진행상황을 프로그래스 바에 표시하는 예. 비동기로 호출하는 경우에는 크로스 쓰레드 문제를 피하기 위해 Invoke 메서드를 사용.
+  * `ProgressChanged` : Load 메서드의 진행상황이 변경될 때 발생
+  * 진행상황을 프로그래스 바에 표시하는 예. 비동기로 호출하는 경우에는 크로스 쓰레드 문제를 피하기 위해 Invoke 메서드를 사용하여야 함.
 ```csharp
 protected override void OnLoad(EventArgs e)
 {
@@ -43,7 +52,8 @@ private void StockLoader_ProgressChanged(object sender, StockLoader.ProgressChan
     prbProgress.Invoke(new Action(() => prbProgress.Value = (int) e.Percent));
 }
 ```
-  * `RequestSending` 페이지 스크래핑을 하기 전에 발생. 이벤트 핸들러에서 특정 조건의 페이지 스크래핑을 건너띄는 데 사용
+
+  * `RequestSending` : 페이지 스크래핑을 하기 전에 발생. 이벤트 핸들러에서 특정 조건의 페이지 스크래핑을 건너띄는 데 사용
   * 코스닥 종목은 건너띄는 예
 ```csharp
 protected override void OnLoad(EventArgs e)
@@ -134,10 +144,6 @@ Assert.AreEqual(84000, prices[2].Open);
 Assert.AreEqual(81600, prices[3].Close);
 Assert.AreEqual(23025766, prices[3].Volume);
 ```
-- 삼성전자의 최근 2일 간의 가격 정보를 가져오는 코드의 예
-```csharp
-```
-
 - 완전한 사용 방법은 [단위 테스트 코드](/Kosdas.UnitTestProject/PriceLoaderTests.cs)에서 확인할 수 있습니다.
 
 

@@ -3,19 +3,22 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using AsyncMethodLibrary;
 using HtmlAgilityPack;
+using Kosdas.Models;
+using Kosdas.Properties;
+using Newtonsoft.Json;
 #endregion
 
 namespace Kosdas
 {
     /// <summary>
-    /// 종목 정보 로더. 열거 가능.
+    ///     종목 정보 로더. 열거 가능.
     /// </summary>
     public class StockLoader : IEnumerable<Stock>
     {
@@ -39,10 +42,12 @@ namespace Kosdas
 
         private StockLoader()
         {
+            var json = Encoding.UTF8.GetString(Resources.stocks);
+            _dictionary = JsonConvert.DeserializeObject<ConcurrentDictionary<string, Stock>>(json);
         }
         #endregion
 
-        private readonly ConcurrentDictionary<string, Stock> _dictionary = new(Environment.ProcessorCount * 4, DictionaryCapacity);
+        private readonly ConcurrentDictionary<string, Stock> _dictionary;
 
         private const int ItemsPerPage = 50;
 
@@ -58,10 +63,8 @@ namespace Kosdas
 
         private static int DictionaryCapacity => (MaxPageForKospi + MaxPageForKosdaq) * ItemsPerPage;
 
-        private bool _loaded;
-
         /// <summary>
-        /// 종목코드에 해당하는 종목정보를 반환한다. 사용 전 Load 혹은 LoadAsync 메서드를 먼저 호출하는 것을 권장함.
+        ///     종목코드에 해당하는 종목정보를 반환한다. 사용 전 Load 혹은 LoadAsync 메서드를 먼저 호출하는 것을 권장함.
         /// </summary>
         /// <param name="stockCode"></param>
         /// <returns>종목코드가 유효하지 않으면 null.</returns>
@@ -69,9 +72,6 @@ namespace Kosdas
         {
             get
             {
-                if (_loaded == false)
-                    Load();
-
                 if (_dictionary.ContainsKey(stockCode))
                     return _dictionary[stockCode];
 
@@ -82,10 +82,7 @@ namespace Kosdas
         #region IEnumerable<Stock>
         public IEnumerator<Stock> GetEnumerator()
         {
-            foreach (var stock in _dictionary)
-            {
-                yield return stock.Value;
-            }
+            foreach (var stock in _dictionary) yield return stock.Value;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -127,10 +124,8 @@ namespace Kosdas
         private string RemoveNoise(string stockName, HashSet<char> noises)
         {
             foreach (var noise in noises)
-            {
                 if (stockName.Contains(noise))
                     stockName = stockName.Replace(noise, '_');
-            }
 
             if (char.IsNumber(stockName[0]))
                 stockName = "_" + stockName;
@@ -145,7 +140,7 @@ namespace Kosdas
         }
 
         /// <summary>
-        /// 전 종목정보를 구한다.
+        ///     전 종목정보를 현재 시점으로 갱신한다. 기본값은 2021/3/1 시점의 정보가 내장되어 있음.
         /// </summary>
         /// <param name="maxPageForKospi">https://finance.naver.com/sise/sise_market_sum.nhn?sosok=0&page=32 의 마지막 페이지. 기본값 사용 권장.</param>
         /// <param name="maxPageForKosdaq">https://finance.naver.com/sise/sise_market_sum.nhn?sosok=1&page=30 의 마지막 페이지. 기본값 사용 권장.</param>
@@ -159,20 +154,19 @@ namespace Kosdas
 
             var urls = new List<(string, Market, int)>();
             foreach (var item in totalPages)
-            {
                 for (int i = 1; i <= item.Value; i++)
                 {
-                    string url = $"https://finance.naver.com/sise/sise_market_sum.nhn?sosok={(int) item.Key}&page={i}";
+                    string url = $"https://finance.naver.com/sise/sise_market_sum.nhn?sosok={(int)item.Key}&page={i}";
                     urls.Add((url, item.Key, i));
                 }
-            }
+
+            _dictionary.Clear();
 
 #if DEBUG
             urls.ForEach(x => LoadCore(x));
 #else
             urls.AsParallel().ForAll(x => LoadCore(x));
 #endif
-            _loaded = true;
         }
 
         private void LoadCore((string url, Market market, int page) tuple)
@@ -201,7 +195,10 @@ namespace Kosdas
                     continue;
 
                 string stockCode = ReadStockCode(tds[1]);
-                Stock stock = new Stock(stockCode, tds[1].InnerText, tuple.market);
+                Stock stock = new Stock();
+                stock.Code = stockCode;
+                stock.Name = tds[1].InnerText;
+                stock.Market = tuple.market;
                 stock.현재가 = tds[2].ParseCell();
                 stock.등락률 = tds[4].ParseCell();
                 stock.거래량 = tds[6].ParseCell();
@@ -281,11 +278,10 @@ namespace Kosdas
         }
         #endregion
 
+        #region RequestSending event things for C# 3.0
         /// <summary>
         ///     페이지에 요청을 보낼려고 함. 취소가능.
         /// </summary>
-
-        #region RequestSending event things for C# 3.0
         public event EventHandler<RequestSendingEventArgs> RequestSending;
 
         protected virtual void OnRequestSending(RequestSendingEventArgs e)

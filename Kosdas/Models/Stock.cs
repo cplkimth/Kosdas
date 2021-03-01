@@ -1,35 +1,36 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using HtmlAgilityPack;
+using Newtonsoft.Json;
 
-namespace Kosdas
+namespace Kosdas.Models
 {
     /// <summary>
     /// 종목 정보
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     public partial class Stock
     {
-        internal Stock(string code, string name, Market market)
+        public Stock()
         {
-            Code = code;
-            Name = name;
-            Market = market;
         }
 
         /// <summary>
         /// 종목코드
         /// </summary>
-        public string Code { get; }
+        [JsonProperty]
+        public string Code { get; internal set; }
         
         /// <summary>
         /// 종목명
         /// </summary>
-        public string Name { get; }
+        [JsonProperty]
+        public string Name { get; internal set; }
         
         /// <summary>
         /// 시장구분
         /// </summary>
-        public Market Market { get; }
+        [JsonProperty]
+        public Market Market { get; internal set; }
         
         /// <summary>
         /// 야후 파이낸스 티커
@@ -41,40 +42,89 @@ namespace Kosdas
             return $"{Ticker} {Name}";
         }
 
+        [JsonProperty]
         public decimal? 현재가 { get; set; }
+        
+        [JsonProperty]
         public decimal? 등락률 { get; internal set; }
+        
+        [JsonProperty]
         public decimal? 거래량 { get; internal set; }
+        
+        [JsonProperty]
         public decimal? 시가 { get; internal set; }
+        
+        [JsonProperty]
         public decimal? 고가 { get; internal set; }
+        
+        [JsonProperty]
         public decimal? 저가 { get; internal set; }
+        
+        [JsonProperty]
         public decimal? 시가총액 { get; internal set; }
+        
+        [JsonProperty]
         public decimal? 매출액 { get; internal set; }
+        
+        [JsonProperty]
         public decimal? 자산총계 { get; internal set; }
+        
+        [JsonProperty]
         public decimal? 부채총계 { get; internal set; }
+        
+        [JsonProperty]
         public decimal? 영업이익 { get; internal set; }
+        
+        [JsonProperty]
         public decimal? 당기순이익 { get; internal set; }
+        
+        [JsonProperty]
         public decimal? 주당순이익 { get; internal set; }
+        
+        [JsonProperty]
         public decimal? 보통주배당금 { get; internal set; }
+        
+        [JsonProperty]
         public decimal? 매출액증가율 { get; internal set; }
+        
+        [JsonProperty]
         public decimal? 영업이익증가율 { get; internal set; }
+        
+        [JsonProperty]
         public decimal? 외국인비율 { get; internal set; }
+        
+        [JsonProperty]
         public decimal? PER{ get; internal set; }
+        
+        [JsonProperty]
         public decimal? ROE{ get; internal set; }
+        
+        [JsonProperty]
         public decimal? ROA{ get; internal set; }
+        
+        [JsonProperty]
         public decimal? PBR{ get; internal set; }
+        
+        [JsonProperty]
         public decimal? 유보율 { get; internal set; }
+        
         /// <summary>
         /// 투자의견
         /// </summary>
-        public decimal? Consensus { get; set; }
+        [JsonProperty]
+        public decimal? Consensus { get; internal set; }
+        
         /// <summary>
         /// 목표주가
         /// </summary>
-        public decimal? TargetPrice { get; set; }
+        [JsonProperty]
+        public decimal? TargetPrice { get; internal set; }
+        
         /// <summary>
         /// 레포트 수
         /// </summary>
-        public decimal? ConsensusCount { get; set; }
+        [JsonProperty]
+        public decimal? ConsensusCount { get; internal set; }
 
         /// <summary>
         /// 현재가 / 목표주가

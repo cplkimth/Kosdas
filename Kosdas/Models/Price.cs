@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Kosdas
+namespace Kosdas.Models
 {
     /// <summary>
     /// 가격 정보

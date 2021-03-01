@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Kosdas.Models;
 
-namespace Kosdas
+namespace Kosdas.Extensions
 {
     public static class PriceExtension
     {

@@ -1,4 +1,4 @@
-namespace Kosdas
+namespace Kosdas.Models
 {
     public partial class Stock
     {
