@@ -32,6 +32,16 @@
   * 영업이익 / 당기순이익 / 주당순이익 / 보통주배당금
   * 매출액증가율 / 영업이익증가율 / 외국인비율 / 유보율
   * PER / ROE / ROA / PBR
+- 코스닥 종목 중 시가총액이 큰 순으로 10개를 출력하는 예
+  * v1.1 실시간 종목정보가 필요할 때만`StockLoader.Load()`메서드를 호출하면 됨.
+```csharp
+var query = from x in StockLoader.Instance
+            where x.Market == Market.KQ
+            orderby x.시가총액 descending
+            select x;
+foreach (var stock in query.Take(10)) 
+    Console.WriteLine(stock);
+```
 - 비동기 메서드 지원 `StockLoader.Instance.LoadAsync().Wait();`
 - 종목명과 종목코드가 저장된 클래스를 생성할 수 있습니다. ([생성된 코드의 예](/Kosdas/Stock.constant.cs))
 ```csharp
