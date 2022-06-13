@@ -14,7 +14,7 @@ namespace Kosdas
     /// <summary>
     ///     종목 정보 로더. 열거 가능.
     /// </summary>
-    public class StockLoader : IEnumerable<Stock>
+    public class StockLoader : IEnumerable<StockRecord>
     {
         static StockLoader()
         {
@@ -37,11 +37,11 @@ namespace Kosdas
         private StockLoader()
         {
             var json = Encoding.UTF8.GetString(Resources.stocks);
-            _dictionary = JsonSerializer.Deserialize<ConcurrentDictionary<string, Stock>>(json)!;
+            _dictionary = JsonSerializer.Deserialize<ConcurrentDictionary<string, StockRecord>>(json)!;
         }
         #endregion
 
-        private readonly ConcurrentDictionary<string, Stock> _dictionary;
+        private readonly ConcurrentDictionary<string, StockRecord> _dictionary;
 
         private const int ItemsPerPage = 50;
 
@@ -62,7 +62,7 @@ namespace Kosdas
         /// </summary>
         /// <param name="stockCode"></param>
         /// <returns>종목코드가 유효하지 않으면 null.</returns>
-        public Stock this[string stockCode]
+        public StockRecord this[string stockCode]
         {
             get
             {
@@ -73,8 +73,8 @@ namespace Kosdas
             }
         }
 
-        #region IEnumerable<Stock>
-        public IEnumerator<Stock> GetEnumerator()
+        #region IEnumerable<StockRecord>
+        public IEnumerator<StockRecord> GetEnumerator()
         {
             foreach (var stock in _dictionary) yield return stock.Value;
         }
@@ -89,7 +89,7 @@ namespace Kosdas
         /// <summary>
         ///     종목명 상수 클래스를 생성한다.
         /// </summary>
-        /// <param name="targetPath">생성할 클래스의 경로. ex)C:\git\KrxHelper\KrxHelper\Stock.constant.cs</param>
+        /// <param name="targetPath">생성할 클래스의 경로. ex)C:\git\KrxHelper\KrxHelper\StockRecord.constant.cs</param>
         /// <param name="namespace">생성할 클래스의 네임스페이스</param>
         /// <param name="class">생성할 클래스의 이름</param>
         public void Generate(string targetPath, string @namespace, string @class)
@@ -189,32 +189,33 @@ namespace Kosdas
                     continue;
 
                 string stockCode = ReadStockCode(tds[1]);
-                Stock stock = new Stock();
-                stock.Code = stockCode;
-                stock.Name = tds[1].InnerText;
-                stock.Market = tuple.market;
-                stock.현재가 = tds[2].ParseCell();
-                stock.등락률 = tds[4].ParseCell();
-                stock.거래량 = tds[6].ParseCell();
-                stock.시가 = tds[9].ParseCell();
-                stock.고가 = tds[10].ParseCell();
-                stock.저가 = tds[11].ParseCell();
-                stock.시가총액 = tds[12].ParseCell();
-                stock.매출액 = tds[13].ParseCell();
-                stock.자산총계 = tds[14].ParseCell();
-                stock.부채총계 = tds[15].ParseCell();
-                stock.영업이익 = tds[16].ParseCell();
-                stock.당기순이익 = tds[17].ParseCell();
-                stock.주당순이익 = tds[18].ParseCell();
-                stock.보통주배당금 = tds[19].ParseCell();
-                stock.매출액증가율 = tds[20].ParseCell();
-                stock.영업이익증가율 = tds[21].ParseCell();
-                stock.외국인비율 = tds[22].ParseCell();
-                stock.PER = tds[23].ParseCell();
-                stock.ROE = tds[24].ParseCell();
-                stock.ROA = tds[25].ParseCell();
-                stock.PBR = tds[26].ParseCell();
-                stock.유보율 = tds[27].ParseCell();
+                StockRecord stock = new StockRecord
+                (
+                    stockCode,
+                    tds[1].InnerText,
+                    tuple.market,
+                    tds[2].ParseCell(),
+                    tds[4].ParseCell(),
+                    tds[6].ParseCell(),
+                    tds[9].ParseCell(),
+                    tds[10].ParseCell(),
+                    tds[11].ParseCell(),
+                    tds[12].ParseCell(),
+                    tds[13].ParseCell(),
+                    tds[14].ParseCell(),
+                    tds[15].ParseCell(),
+                    tds[16].ParseCell(),
+                    tds[17].ParseCell(),
+                    tds[18].ParseCell(),
+                    tds[19].ParseCell(),
+                    tds[20].ParseCell(),
+                    tds[21].ParseCell(),
+                    tds[22].ParseCell(),
+                    tds[23].ParseCell(),
+                    tds[24].ParseCell(),
+                    tds[25].ParseCell(),
+                    tds[26].ParseCell(),
+                    tds[27].ParseCell());
 
                 _dictionary.TryAdd(stock.Code, stock);
             }
