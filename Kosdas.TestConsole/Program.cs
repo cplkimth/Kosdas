@@ -18,15 +18,13 @@ namespace Kosdas.TestConsole
     {
         static void Main(string[] args)
         {
-            var stock = StockLoader.Instance[Stock.삼성전자];
-            Console.WriteLine(stock);
 
             // GenerateAsyncWrapper();
             // return;
             // Example();
             // return;
 
-            // WriteStockCodes();
+            WriteStockCodes();
             // FindRecommended();
         }
 
@@ -39,9 +37,18 @@ namespace Kosdas.TestConsole
             foreach (var stock in StockLoader.Instance)
                 dictionary.TryAdd(stock.Code, stock);
 
-            var json = JsonSerializer.Serialize(dictionary);
+            var s1 = dictionary[Stock.삼성전자];
 
-            File.WriteAllText(@"C:\Users\thkim\Desktop\stocks.json", json);
+            // var json = JsonSerializer.Serialize(dictionary);
+            // File.WriteAllText(@"C:\Users\thkim\Desktop\stocks.json", json);
+            
+            var json = JsonSerializer.SerializeToUtf8Bytes(dictionary);
+            File.WriteAllBytes(@"C:\Users\thkim\Desktop\stocks.json", json);
+
+            var span = new ReadOnlySpan<byte>(json);
+            var stocks = JsonSerializer.Deserialize<ConcurrentDictionary<string, Stock>>(json);
+            var s = stocks[Stock.삼성전자];
+            Console.WriteLine(s);
         }
 
         private static void FindRecommended()
