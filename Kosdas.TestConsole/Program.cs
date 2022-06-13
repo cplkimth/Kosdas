@@ -8,9 +8,9 @@ using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json;
 using AsyncMethodLibrary;
 using Kosdas.Models;
-using Newtonsoft.Json;
 
 namespace Kosdas.TestConsole
 {
@@ -18,6 +18,9 @@ namespace Kosdas.TestConsole
     {
         static void Main(string[] args)
         {
+            var stock = StockLoader.Instance[Stock.삼성전자];
+            Console.WriteLine(stock);
+
             // GenerateAsyncWrapper();
             // return;
             // Example();
@@ -36,7 +39,7 @@ namespace Kosdas.TestConsole
             foreach (var stock in StockLoader.Instance)
                 dictionary.TryAdd(stock.Code, stock);
 
-            var json = JsonConvert.SerializeObject(dictionary);
+            var json = JsonSerializer.Serialize(dictionary);
 
             File.WriteAllText(@"C:\Users\thkim\Desktop\stocks.json", json);
         }

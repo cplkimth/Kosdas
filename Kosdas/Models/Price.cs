@@ -1,9 +1,7 @@
-﻿using System;
-
-namespace Kosdas.Models
+﻿namespace Kosdas.Models
 {
     /// <summary>
-    /// 가격 정보
+    ///     가격 정보
     /// </summary>
     public class Price
     {
@@ -18,32 +16,32 @@ namespace Kosdas.Models
         }
 
         /// <summary>
-        /// 일자
+        ///     일자
         /// </summary>
         public DateTime Date { get; }
-        
+
         /// <summary>
-        /// 시가
+        ///     시가
         /// </summary>
         public decimal Open { get; }
-        
+
         /// <summary>
-        /// 고가
+        ///     고가
         /// </summary>
         public decimal High { get; }
-        
+
         /// <summary>
-        /// 저가
+        ///     저가
         /// </summary>
         public decimal Low { get; }
-        
+
         /// <summary>
-        /// 종가
+        ///     종가
         /// </summary>
         public decimal Close { get; }
-        
+
         /// <summary>
-        /// 거래량
+        ///     거래량
         /// </summary>
         public decimal Volume { get; }
 

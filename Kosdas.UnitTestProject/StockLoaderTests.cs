@@ -61,7 +61,7 @@ namespace Kosdas.UnitTest
             Assert.AreEqual(86000, price.High);
             Assert.AreEqual(84200, price.Low);
             Assert.AreEqual(84900, price.Close);
-            Assert.AreEqual(20373346, price.Volume);
+            Assert.AreEqual(20483100, price.Volume);
         }
 
         [TestMethod()]

@@ -1,18 +1,12 @@
 ﻿#region
-using System;
 using System.Collections;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
 using HtmlAgilityPack;
 using Kosdas.Models;
 using Kosdas.Properties;
-using Newtonsoft.Json;
 #endregion
 
 namespace Kosdas
@@ -43,7 +37,7 @@ namespace Kosdas
         private StockLoader()
         {
             var json = Encoding.UTF8.GetString(Resources.stocks);
-            _dictionary = JsonConvert.DeserializeObject<ConcurrentDictionary<string, Stock>>(json);
+            _dictionary = JsonSerializer.Deserialize<ConcurrentDictionary<string, Stock>>(json)!;
         }
         #endregion
 
@@ -156,7 +150,7 @@ namespace Kosdas
             foreach (var item in totalPages)
                 for (int i = 1; i <= item.Value; i++)
                 {
-                    string url = $"https://finance.naver.com/sise/sise_market_sum.nhn?sosok={(int)item.Key}&page={i}";
+                    string url = $"https://finance.naver.com/sise/sise_market_sum.nhn?sosok={(int) item.Key}&page={i}";
                     urls.Add((url, item.Key, i));
                 }
 

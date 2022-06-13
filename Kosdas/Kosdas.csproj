@@ -1,34 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>Taehyun Kim</Authors>
-    <Product>Korean Stock Data Scrapper</Product>
-    <Description>한국 주식 데이터 스크래퍼</Description>
-    <Copyright>Copyright © Lovanpis 2021</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/cplkimth/Kosdas</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/cplkimth/Kosdas.git</RepositoryUrl>
-    <PackageIcon>kosdas package icon.png</PackageIcon>
-    <PackageTags>KoreanStock Stock Scrapper</PackageTags>
-    <Version>1.1.0</Version>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AsyncMethodLibrary" Version="1.0.2" />
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.30" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
+    <Content Include="D:\git\Kosdas\documents\images\kosdas package icon.png" Link="kosdas package icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\documents\images\kosdas package icon.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+    <PackageReference Include="AsyncMethodLibrary" Version="1.0.2" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.43" />
   </ItemGroup>
 
   <ItemGroup>

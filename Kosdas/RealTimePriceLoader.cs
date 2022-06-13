@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Kosdas
 {
@@ -61,7 +61,8 @@ namespace Kosdas
 			WebClient web = new();
 			web.Headers[HttpRequestHeader.Referer] = $"https://finance.daum.net/domestic/all_stocks?market={market}";
 			var json = web.DownloadString(url);
-			var data = JsonConvert.DeserializeObject<dynamic>(json).data;
+            var data = JsonSerializer.Deserialize<dynamic>(json);
+                // JsonConvert.DeserializeObject<dynamic>(json).data;
 
 			for (int i = 0; i < data.Count; i++)
 			{
