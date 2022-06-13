@@ -7,6 +7,6 @@ namespace Kosdas.Extensions
 {
     public static class PriceExtension
     {
-        public static Dictionary<DateTime, Price> ToDictionary(this IEnumerable<Price> source) => source.ToDictionary(x => x.Date, x => x);
+        public static Dictionary<DateTime, PriceRecord> ToDictionary(this IEnumerable<PriceRecord> source) => source.ToDictionary(x => x.Date, x => x);
     }
 }

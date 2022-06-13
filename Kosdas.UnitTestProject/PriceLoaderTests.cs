@@ -75,7 +75,7 @@ namespace Kosdas.UnitTest
         [TestMethod()]
         public void 야후금융에서_코스닥_가격정보_가져오기()
         {
-            var price = PriceLoader.Naver.Load(Stock.아이퀘스트, 2021, 2, 26);
+            var price = PriceLoader.Naver.Load(StockRecord.아이퀘스트, 2021, 2, 26);
 
             Assert.AreEqual(new DateTime(2021, 2, 26), price.Date);
             Assert.AreEqual(17500, price.Open);
@@ -88,7 +88,7 @@ namespace Kosdas.UnitTest
         [TestMethod()]
         public void 수정주가를_반영하여야_함()
         {
-            var prices = PriceLoader.Yahoo.Load(Stock.삼성전자, new DateTime(2018,5,3), new DateTime(2018,5,4)).ToList();
+            var prices = PriceLoader.Yahoo.Load(StockRecord.삼성전자, new DateTime(2018,5,3), new DateTime(2018,5,4)).ToList();
 
             Assert.AreEqual(53000, prices[0].Open);
             Assert.AreEqual(53000, prices[0].Close);

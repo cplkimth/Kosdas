@@ -1,6 +1,6 @@
 namespace Kosdas.Models
 {
-    public partial class Stock
+    public partial record StockRecord
     {
         public const string 대유에이피 = "290120";
 public const string 아시아종묘 = "154030";
