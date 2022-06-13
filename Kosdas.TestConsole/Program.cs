@@ -18,13 +18,12 @@ namespace Kosdas.TestConsole
     {
         static void Main(string[] args)
         {
-
             // GenerateAsyncWrapper();
             // return;
             // Example();
             // return;
 
-            WriteStockCodes();
+            // WriteStockCodes();
             // FindRecommended();
         }
 

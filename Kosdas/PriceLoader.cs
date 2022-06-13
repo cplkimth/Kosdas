@@ -72,9 +72,9 @@ namespace Kosdas
         /// <param name="to">종료일</param>
         /// <returns></returns>
         [ForAsync]
-        public abstract IEnumerable<Price> Load(string stockCode, DateTime from, DateTime to);
+        public abstract IEnumerable<PriceRecord> Load(string stockCode, DateTime from, DateTime to);
 
-        protected abstract Price ParsePrice(string line);
+        protected abstract PriceRecord ParsePrice(string line);
 
         /// <summary>
         ///     최근 N일간의 가격을 가져온다.
@@ -83,7 +83,7 @@ namespace Kosdas
         /// <param name="days">최근 N일</param>
         /// <returns></returns>
         [ForAsync]
-        public IEnumerable<Price> Load(string stockCode, int days)
+        public IEnumerable<PriceRecord> Load(string stockCode, int days)
         {
             DateTime from = DateTime.Today.AddDays(days * -1);
 
@@ -97,7 +97,7 @@ namespace Kosdas
         /// <param name="date">특정일</param>
         /// <returns>조건에 맞는 가격정보가 없으면 null.</returns>
         [ForAsync]
-        public Price Load(string stockCode, DateTime date)
+        public PriceRecord Load(string stockCode, DateTime date)
         {
             return Load(stockCode, date.AddDays(최장휴장일 * -1), date)?.LastOrDefault();
         }
@@ -111,7 +111,7 @@ namespace Kosdas
         /// <param name="day"></param>
         /// <returns></returns>
         [ForAsync]
-        public Price Load(string stockCode, int year, int month, int day) => Load(stockCode, new DateTime(year, month, day));
+        public PriceRecord Load(string stockCode, int year, int month, int day) => Load(stockCode, new DateTime(year, month, day));
 
         /// <summary>
         ///     마지막 거래일의 가격을 가져온다.
@@ -119,6 +119,6 @@ namespace Kosdas
         /// <param name="stockCode">종목코드</param>
         /// <returns></returns>
         [ForAsync]
-        public Price Load(string stockCode) => Load(stockCode, DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day);
+        public PriceRecord Load(string stockCode) => Load(stockCode, DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day);
     }
 }
