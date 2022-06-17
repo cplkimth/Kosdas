@@ -27,7 +27,11 @@ namespace Kosdas.TestConsole
             // FindRecommended();
 
             var instance = StockLoader.Instance;
-            Console.WriteLine(instance.Count());
+            var sj = instance[StockRecord.삼성전자];
+            Console.WriteLine(sj);
+
+            Console.WriteLine("press any key to exit.");
+            Console.ReadKey();
         }
 
         private static void WriteStockCodes()
