@@ -60,7 +60,7 @@ namespace Kosdas
         }
         #endregion
 
-        protected abstract Price ParsePrice(string line);
+        protected abstract PriceBase ParsePrice(string line);
 
         /// <summary>
         /// 기본 가격정보 로더 (Yahoo와 동일)
@@ -75,10 +75,10 @@ namespace Kosdas
         /// <param name="to">종료일</param>
         /// <returns></returns>
         [ForAsync]
-        public abstract IEnumerable<Price> Load(string stockCode, DateTime from, DateTime to);
+        public abstract IEnumerable<PriceBase> Load(string stockCode, DateTime from, DateTime to);
 
         [ForAsync]
-        public IReadOnlyList<Price> LoadAsList(string stockCode, DateTime from, DateTime to) => Load(stockCode, from, to).ToImmutableList();
+        public IReadOnlyList<PriceBase> LoadAsList(string stockCode, DateTime from, DateTime to) => Load(stockCode, from, to).ToImmutableList();
 
         /// <summary>
         ///     최근 N일간의 가격을 가져온다.
@@ -87,7 +87,7 @@ namespace Kosdas
         /// <param name="days">최근 N일</param>
         /// <returns></returns>
         [ForAsync]
-        public IEnumerable<Price> Load(string stockCode, int days)
+        public IEnumerable<PriceBase> Load(string stockCode, int days)
         {
             DateTime from = DateTime.Today.AddDays(days * -1);
 
@@ -95,7 +95,7 @@ namespace Kosdas
         }
 
         [ForAsync]
-        public IReadOnlyList<Price> LoadAsList(string stockCode, int days) => Load(stockCode, days).ToImmutableList();
+        public IReadOnlyList<PriceBase> LoadAsList(string stockCode, int days) => Load(stockCode, days).ToImmutableList();
 
         /// <summary>
         ///     특정일의 가격을 가져온다. 휴장일일 경우에는 마지막 거래일의 가격을 가져온다.
@@ -104,7 +104,7 @@ namespace Kosdas
         /// <param name="date">특정일</param>
         /// <returns>조건에 맞는 가격정보가 없으면 null.</returns>
         [ForAsync]
-        public Price Load(string stockCode, DateTime date)
+        public PriceBase Load(string stockCode, DateTime date)
         {
             return Load(stockCode, date.AddDays(최장휴장일 * -1), date)?.LastOrDefault();
         }
@@ -118,7 +118,7 @@ namespace Kosdas
         /// <param name="day"></param>
         /// <returns></returns>
         [ForAsync]
-        public Price Load(string stockCode, int year, int month, int day) => Load(stockCode, new DateTime(year, month, day));
+        public PriceBase Load(string stockCode, int year, int month, int day) => Load(stockCode, new DateTime(year, month, day));
 
         /// <summary>
         ///     마지막 거래일의 가격을 가져온다.
@@ -126,6 +126,6 @@ namespace Kosdas
         /// <param name="stockCode">종목코드</param>
         /// <returns></returns>
         [ForAsync]
-        public Price Load(string stockCode) => Load(stockCode, DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day);
+        public PriceBase Load(string stockCode) => Load(stockCode, DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day);
     }
 }

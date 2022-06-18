@@ -27,7 +27,7 @@ namespace Kosdas.TestConsole
             // FindRecommended();
 
             var instance = StockLoader.Instance;
-            var sj = instance[Stock.삼성전자];
+            var sj = instance[StockBase.삼성전자];
             Console.WriteLine(sj);
 
             Console.WriteLine("press any key to exit.");
@@ -38,12 +38,12 @@ namespace Kosdas.TestConsole
         {
             StockLoader.Instance.Load();
 
-            ConcurrentDictionary<string, Stock> dictionary = new ConcurrentDictionary<string, Stock>();
+            ConcurrentDictionary<string, StockBase> dictionary = new ConcurrentDictionary<string, StockBase>();
 
             foreach (var stock in StockLoader.Instance)
                 dictionary.TryAdd(stock.Code, stock);
 
-            var s1 = dictionary[Stock.삼성전자];
+            var s1 = dictionary[StockBase.삼성전자];
 
             // var json = JsonSerializer.Serialize(dictionary);
             // File.WriteAllText(@"C:\Users\thkim\Desktop\stocks.json", json);
@@ -52,8 +52,8 @@ namespace Kosdas.TestConsole
             File.WriteAllBytes(@"C:\Users\thkim\Desktop\stocks.json", json);
 
             var span = new ReadOnlySpan<byte>(json);
-            var stocks = JsonSerializer.Deserialize<ConcurrentDictionary<string, Stock>>(json);
-            var s = stocks[Stock.삼성전자];
+            var stocks = JsonSerializer.Deserialize<ConcurrentDictionary<string, StockBase>>(json);
+            var s = stocks[StockBase.삼성전자];
             Console.WriteLine(s);
         }
 

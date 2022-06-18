@@ -14,7 +14,7 @@ namespace Kosdas
         {
         }
 
-        public override IEnumerable<Price> Load(string stockCode, DateTime @from, DateTime to)
+        public override IEnumerable<PriceBase> Load(string stockCode, DateTime @from, DateTime to)
         {
             string url = $"https://fchart.stock.naver.com/siseJson.nhn?symbol={stockCode}&requestType=1&startTime={from:yyyyMMdd}&endTime={to:yyyyMMdd}&timeframe=day";
 
@@ -27,14 +27,14 @@ namespace Kosdas
             return lines.Select(x => ParsePrice(x));
         }
 
-        protected override Price ParsePrice(string line)
+        protected override PriceBase ParsePrice(string line)
         {
             line = line.Trim().Substring(2, line.Length - 4);
             line = line.Replace("\"", string.Empty);
 
             var tokens = line.Split(',');
 
-            return new Price(
+            return new PriceBase(
                 DateTime.ParseExact(tokens[0], "yyyyMMdd", null),
                 Convert.ToDouble(tokens[1]),
                 Convert.ToDouble(tokens[2]),

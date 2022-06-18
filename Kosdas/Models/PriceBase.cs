@@ -3,12 +3,12 @@
     /// <summary>
     ///     가격 정보
     /// </summary>
-    public class Price
+    public class PriceBase
     {
         /// <summary>
         ///     가격 정보
         /// </summary>
-        public Price(DateTime Date, double Open, double High, double Low, double Close, double Volume)
+        public PriceBase(DateTime Date, double Open, double High, double Low, double Close, double Volume)
         {
             this.Date = Date;
             this.Open = Open;

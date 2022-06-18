@@ -9,12 +9,12 @@ namespace Kosdas.Models
     /// <summary>
     ///     종목 정보
     /// </summary>
-    public partial class Stock
+    public partial class StockBase
     {
         /// <summary>
         ///     종목 정보
         /// </summary>
-        public Stock(string Code, string Name, Market Market, decimal? 현재가, decimal? 등락률, decimal? 거래량, decimal? 시가, decimal? 고가, decimal? 저가, decimal? 시가총액, decimal? 매출액, decimal? 자산총계, decimal? 부채총계, decimal? 영업이익,
+        public StockBase(string Code, string Name, Market Market, decimal? 현재가, decimal? 등락률, decimal? 거래량, decimal? 시가, decimal? 고가, decimal? 저가, decimal? 시가총액, decimal? 매출액, decimal? 자산총계, decimal? 부채총계, decimal? 영업이익,
             decimal? 당기순이익, decimal? 주당순이익, decimal? 보통주배당금, decimal? 매출액증가율, decimal? 영업이익증가율, decimal? 외국인비율, decimal? PER, decimal? ROE, decimal? ROA, decimal? PBR, decimal? 유보율)
         {
             this.Code = Code;

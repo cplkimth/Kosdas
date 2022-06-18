@@ -15,7 +15,7 @@ namespace Kosdas
         {
         }
 
-        public override IEnumerable<Price> Load(string stockCode, DateTime @from, DateTime to)
+        public override IEnumerable<PriceBase> Load(string stockCode, DateTime @from, DateTime to)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace Kosdas
             }
         }
 
-        protected override Price ParsePrice(string line)
+        protected override PriceBase ParsePrice(string line)
         {
             var tokens = line.Split(',');
 
@@ -46,7 +46,7 @@ namespace Kosdas
             if (tokens[1].Trim() == "null")
                 return null;
 
-            return new Price(
+            return new PriceBase(
                 DateTime.Parse(tokens[0]),
                 Convert.ToDouble(tokens[1]),
                 Convert.ToDouble(tokens[2]),
