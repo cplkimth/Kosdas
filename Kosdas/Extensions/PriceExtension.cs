@@ -8,8 +8,6 @@ namespace Kosdas.Extensions
 {
     public static class PriceExtension
     {
-        public static Dictionary<DateTime, PriceRecord> ToDictionary(this IEnumerable<PriceRecord> source) => source.ToDictionary(x => x.Date, x => x);
-
-        public static IReadOnlyList<T> ToList<T>(this IEnumerable<PriceRecord> source, Func<PriceRecord, T> selector) => source.Select(selector).ToImmutableList();
+        public static Dictionary<DateTime, Price> ToDictionary(this IEnumerable<Price> source) => source.ToDictionary(x => x.Date, x => x);
     }
 }

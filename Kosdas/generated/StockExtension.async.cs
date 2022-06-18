@@ -2,26 +2,27 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Kosdas.Models;
 #endregion
 
-namespace Kosdas
+namespace Kosdas.Extensions
 {
     public static partial class StockExtension
     {
-        public static Task<IEnumerable<PriceRecord>> LoadPriceAsync(this Models.StockRecord stock, DateTime from, DateTime to) =>
-            Task.Factory.StartNew(() => Extensions.StockExtension.LoadPrice(stock, from, to));
+        public static Task<System.Collections.Generic.IEnumerable<Kosdas.Models.Price>> LoadPriceAsync(this  Kosdas.Models.Stock stock, System.DateTime from, System.DateTime to) => 
+            Task.Factory.StartNew(() => LoadPrice(stock, from, to));
 
-        public static Task<PriceRecord> LoadPriceAsync(this Models.StockRecord stock, DateTime date) =>
-            Task.Factory.StartNew(() => Extensions.StockExtension.LoadPrice(stock, date));
+public static Task<Kosdas.Models.Price> LoadPriceAsync(this  Kosdas.Models.Stock stock, System.DateTime date) => 
+            Task.Factory.StartNew(() => LoadPrice(stock, date));
 
-        public static Task<PriceRecord> LoadPriceAsync(this Models.StockRecord stock, int year, int month, int day) =>
-            Task.Factory.StartNew(() => Extensions.StockExtension.LoadPrice(stock, year, month, day));
+public static Task<Kosdas.Models.Price> LoadPriceAsync(this  Kosdas.Models.Stock stock, System.Int32 year, System.Int32 month, System.Int32 day) => 
+            Task.Factory.StartNew(() => LoadPrice(stock, year, month, day));
 
-        public static Task<PriceRecord> LoadPriceAsync(this Models.StockRecord stock) =>
-            Task.Factory.StartNew(() => Extensions.StockExtension.LoadPrice(stock));
+public static Task<Kosdas.Models.Price> LoadPriceAsync(this  Kosdas.Models.Stock stock) => 
+            Task.Factory.StartNew(() => LoadPrice(stock));
 
-        public static Task<IEnumerable<PriceRecord>> LoadPriceAsync(this Models.StockRecord stock, int days) =>
-            Task.Factory.StartNew(() => Extensions.StockExtension.LoadPrice(stock, days));
+public static Task<System.Collections.Generic.IEnumerable<Kosdas.Models.Price>> LoadPriceAsync(this  Kosdas.Models.Stock stock, System.Int32 days) => 
+            Task.Factory.StartNew(() => LoadPrice(stock, days));
+
+
     }
 }

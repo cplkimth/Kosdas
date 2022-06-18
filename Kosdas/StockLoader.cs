@@ -14,7 +14,7 @@ namespace Kosdas
     /// <summary>
     ///     종목 정보 로더. 열거 가능.
     /// </summary>
-    public class StockLoader : IEnumerable<StockRecord>
+    public class StockLoader : IEnumerable<Stock>
     {
         static StockLoader()
         {
@@ -37,11 +37,11 @@ namespace Kosdas
         private StockLoader()
         {
             var json = Encoding.UTF8.GetString(Resources.stocks);
-            _dictionary = JsonSerializer.Deserialize<ConcurrentDictionary<string, StockRecord>>(json)!;
+            _dictionary = JsonSerializer.Deserialize<ConcurrentDictionary<string, Stock>>(json)!;
         }
         #endregion
 
-        private readonly ConcurrentDictionary<string, StockRecord> _dictionary;
+        private readonly ConcurrentDictionary<string, Stock> _dictionary;
 
         private const int ItemsPerPage = 50;
 
@@ -62,7 +62,7 @@ namespace Kosdas
         /// </summary>
         /// <param name="stockCode"></param>
         /// <returns>종목코드가 유효하지 않으면 null.</returns>
-        public StockRecord this[string stockCode]
+        public Stock this[string stockCode]
         {
             get
             {
@@ -73,8 +73,8 @@ namespace Kosdas
             }
         }
 
-        #region IEnumerable<StockRecord>
-        public IEnumerator<StockRecord> GetEnumerator()
+        #region IEnumerable<Stock>
+        public IEnumerator<Stock> GetEnumerator()
         {
             foreach (var stock in _dictionary) yield return stock.Value;
         }
@@ -89,7 +89,7 @@ namespace Kosdas
         /// <summary>
         ///     종목명 상수 클래스를 생성한다.
         /// </summary>
-        /// <param name="targetPath">생성할 클래스의 경로. ex)C:\git\KrxHelper\KrxHelper\StockRecord.constant.cs</param>
+        /// <param name="targetPath">생성할 클래스의 경로. ex)C:\git\KrxHelper\KrxHelper\Stock.constant.cs</param>
         /// <param name="namespace">생성할 클래스의 네임스페이스</param>
         /// <param name="class">생성할 클래스의 이름</param>
         public void Generate(string targetPath, string @namespace, string @class)
@@ -189,7 +189,7 @@ namespace Kosdas
                     continue;
 
                 string stockCode = ReadStockCode(tds[1]);
-                StockRecord stock = new StockRecord
+                Stock stock = new Stock
                 (
                     stockCode,
                     tds[1].InnerText,

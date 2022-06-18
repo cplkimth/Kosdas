@@ -6,7 +6,7 @@
     <Nullable>disable</Nullable>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <AssemblyVersion></AssemblyVersion>
-    <Version>1.2.2.0</Version>
+    <Version>1.2.3.0</Version>
     <PackageProjectUrl>https://github.com/cplkimth/Kosdas</PackageProjectUrl>
     <Description>한국 주식 데이터 스크래퍼</Description>
     <PackageIcon>kosdas package icon.png</PackageIcon>
