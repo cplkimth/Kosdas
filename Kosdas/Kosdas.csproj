@@ -6,7 +6,7 @@
     <Nullable>disable</Nullable>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <AssemblyVersion></AssemblyVersion>
-    <Version>1.2.3.0</Version>
+    <Version>1.2.4.0</Version>
     <PackageProjectUrl>https://github.com/cplkimth/Kosdas</PackageProjectUrl>
     <Description>한국 주식 데이터 스크래퍼</Description>
     <PackageIcon>kosdas package icon.png</PackageIcon>
@@ -15,6 +15,7 @@
     <PackageTags>korean stock</PackageTags>
     <NeutralLanguage>ko-KR</NeutralLanguage>
     <Authors>cplkimth</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AsyncMethodLibrary" Version="1.0.2" />
+    <PackageReference Include="AsyncMethodLibrary" Version="1.0.3" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.43" />
   </ItemGroup>
 
