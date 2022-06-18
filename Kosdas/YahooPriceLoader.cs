@@ -48,11 +48,11 @@ namespace Kosdas
 
             return new PriceRecord(
                 DateTime.Parse(tokens[0]),
-                Convert.ToDecimal(tokens[1]),
-                Convert.ToDecimal(tokens[2]),
-                Convert.ToDecimal(tokens[3]),
-                Convert.ToDecimal(tokens[4]),
-                Convert.ToDecimal(tokens[6])
+                Convert.ToDouble(tokens[1]),
+                Convert.ToDouble(tokens[2]),
+                Convert.ToDouble(tokens[3]),
+                Convert.ToDouble(tokens[4]),
+                Convert.ToDouble(tokens[6])
             );
         }
     }
