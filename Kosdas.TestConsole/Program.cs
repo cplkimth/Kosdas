@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using AsyncMethodLibrary;
 using Kosdas.Models;
 
@@ -18,17 +19,31 @@ namespace Kosdas.TestConsole
     {
         static void Main(string[] args)
         {
-            GenerateAsyncWrapper();
-            return;
-            // Example();
+            // GenerateAsyncWrapper();
             // return;
+            // var stockIds = StockLoader.Instance.Select(x => x.Code);
+            var stockIds = StockLoader.Instance.Select(x => x.Code).OrderBy(x => x).Take(100);
+            // var stockIds = new[] {"005930", "000020"};
+            foreach (var stockId in stockIds)
+            {
+                Thread.Sleep(2000);
 
-            // WriteStockCodes();
-            // FindRecommended();
+                Console.WriteLine(stockId);
 
-            var instance = StockLoader.Instance;
-            var sj = instance[StockBase.삼성전자];
-            Console.WriteLine(sj);
+                List<Value> values = null;
+
+                try
+                {
+                    values = ValueLoader.Instance.Load(stockId);
+                }
+                catch
+                {
+                    continue;
+                }
+                
+                foreach (var value in values)
+                    Console.WriteLine("\t" + value);    
+            }
 
             Console.WriteLine("press any key to exit.");
             Console.ReadKey();
