@@ -63,6 +63,16 @@ namespace Kosdas.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] indicators {
+            get {
+                object obj = ResourceManager.GetObject("indicators", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] kosdas_package_icon {
             get {
                 object obj = ResourceManager.GetObject("kosdas package icon", resourceCulture);

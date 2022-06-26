@@ -21,8 +21,11 @@ namespace Kosdas.TestConsole
     {
         static void Main(string[] args)
         {
-            // Foo();
-            Goo();
+            // WriteToJson();
+            // Goo();
+
+            Strategy strategy = new Strategy();
+            strategy.Run("005930");
 
             Console.WriteLine("press any key to exit.");
             Console.ReadKey();
@@ -30,26 +33,27 @@ namespace Kosdas.TestConsole
 
         private static void Goo()
         {
-            var value = ValueLoader.Instance.LoadLatest("005930");
-            var value2 = value.Create(58400);
-            Console.WriteLine(value);
-            Console.WriteLine(value2);
+            var i1 = IndicatorLoader.Instance.LoadLatest("005930");
+            var i2 = i1.Apply(58400);
+            Console.WriteLine(i1);
+            Console.WriteLine(i2);
+            Console.WriteLine($"{(i2.EPS.Value * i2.Price.Value):N2}");
         }
 
-        private static void Foo()
+        private static void WriteToJson()
         {
-            // var stockIds = StockLoader.Instance.Select(x => x.Code);
-            var stockIds = StockLoader.Instance.Select(x => x.Code).OrderBy(x => x).Take(1);
+            var stockIds = StockLoader.Instance.Select(x => x.Code);
+            // var stockIds = StockLoader.Instance.Select(x => x.Code).OrderBy(x => x).Take(1);
             // var stockIds = new[] {"005930", "000020"};
 
-            List<Value> list = new();
+            List<Indicator> list = new();
             foreach (var stockId in stockIds)
             {
                 Print($"{StockLoader.Instance[stockId]} [{stockId}]");
 
                 try
                 {
-                    List<Value> values = ValueLoader.Instance.Load(stockId);
+                    List<Indicator> values = IndicatorLoader.Instance.Load(stockId);
                     values.RemoveAll(x => x.Year == 2022);
                     foreach (var value in values)
                     {
@@ -66,11 +70,11 @@ namespace Kosdas.TestConsole
                 }
             }
 
-            // JsonSerializerOptions options = new JsonSerializerOptions();
-            // options.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
-            // options.WriteIndented = true;
-            // var json = JsonSerializer.Serialize(list, options);
-            // File.WriteAllText(@"d:\Desktop\values.json", json);
+            JsonSerializerOptions options = new JsonSerializerOptions();
+            options.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
+            options.WriteIndented = true;
+            var json = JsonSerializer.Serialize(list, options);
+            File.WriteAllText(@"d:\Desktop\values.json", json);
         }
 
         private static void LoadJson()
@@ -81,7 +85,7 @@ namespace Kosdas.TestConsole
             options.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
             options.WriteIndented = true;
 
-            var list = JsonSerializer.Deserialize<List<Value>>(json, options);
+            var list = JsonSerializer.Deserialize<List<Indicator>>(json, options);
             list.RemoveAll(x => x.Year != 2021);
             Console.WriteLine(list.Count);
 
@@ -98,12 +102,12 @@ namespace Kosdas.TestConsole
         {
             StockLoader.Instance.Load();
 
-            ConcurrentDictionary<string, StockBase> dictionary = new ConcurrentDictionary<string, StockBase>();
+            ConcurrentDictionary<string, Stock> dictionary = new ConcurrentDictionary<string, Stock>();
 
             foreach (var stock in StockLoader.Instance)
                 dictionary.TryAdd(stock.Code, stock);
 
-            var s1 = dictionary[StockBase.삼성전자];
+            var s1 = dictionary[Stock.삼성전자];
 
             // var json = JsonSerializer.Serialize(dictionary);
             // File.WriteAllText(@"C:\Users\thkim\Desktop\stocks.json", json);
@@ -112,8 +116,8 @@ namespace Kosdas.TestConsole
             File.WriteAllBytes(@"C:\Users\thkim\Desktop\stocks.json", json);
 
             var span = new ReadOnlySpan<byte>(json);
-            var stocks = JsonSerializer.Deserialize<ConcurrentDictionary<string, StockBase>>(json);
-            var s = stocks[StockBase.삼성전자];
+            var stocks = JsonSerializer.Deserialize<ConcurrentDictionary<string, Stock>>(json);
+            var s = stocks[Stock.삼성전자];
             Console.WriteLine(s);
         }
 

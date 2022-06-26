@@ -14,7 +14,7 @@ namespace Kosdas
     /// <summary>
     ///     종목 정보 로더. 열거 가능.
     /// </summary>
-    public class StockLoader : IEnumerable<StockBase>
+    public class StockLoader : IEnumerable<Stock>
     {
         static StockLoader()
         {
@@ -37,11 +37,11 @@ namespace Kosdas
         private StockLoader()
         {
             var json = Encoding.UTF8.GetString(Resources.stocks);
-            _dictionary = JsonSerializer.Deserialize<ConcurrentDictionary<string, StockBase>>(json)!;
+            _dictionary = JsonSerializer.Deserialize<ConcurrentDictionary<string, Stock>>(json)!;
         }
         #endregion
 
-        private readonly ConcurrentDictionary<string, StockBase> _dictionary;
+        private readonly ConcurrentDictionary<string, Stock> _dictionary;
 
         private const int ItemsPerPage = 50;
 
@@ -62,7 +62,7 @@ namespace Kosdas
         /// </summary>
         /// <param name="stockCode"></param>
         /// <returns>종목코드가 유효하지 않으면 null.</returns>
-        public StockBase this[string stockCode]
+        public Stock this[string stockCode]
         {
             get
             {
@@ -74,7 +74,7 @@ namespace Kosdas
         }
 
         #region IEnumerable<StockBase>
-        public IEnumerator<StockBase> GetEnumerator()
+        public IEnumerator<Stock> GetEnumerator()
         {
             foreach (var stock in _dictionary) yield return stock.Value;
         }
@@ -189,7 +189,7 @@ namespace Kosdas
                     continue;
 
                 string stockCode = ReadStockCode(tds[1]);
-                StockBase stock = new StockBase
+                Stock stock = new Stock
                 (
                     stockCode,
                     tds[1].InnerText,
