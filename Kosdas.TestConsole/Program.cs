@@ -8,7 +8,9 @@ using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Unicode;
 using System.Threading;
 using AsyncMethodLibrary;
 using Kosdas.Models;
@@ -19,34 +21,77 @@ namespace Kosdas.TestConsole
     {
         static void Main(string[] args)
         {
-            // GenerateAsyncWrapper();
-            // return;
-            // var stockIds = StockLoader.Instance.Select(x => x.Code);
-            var stockIds = StockLoader.Instance.Select(x => x.Code).OrderBy(x => x).Take(100);
-            // var stockIds = new[] {"005930", "000020"};
-            foreach (var stockId in stockIds)
-            {
-                Thread.Sleep(2000);
-
-                Console.WriteLine(stockId);
-
-                List<Value> values = null;
-
-                try
-                {
-                    values = ValueLoader.Instance.Load(stockId);
-                }
-                catch
-                {
-                    continue;
-                }
-                
-                foreach (var value in values)
-                    Console.WriteLine("\t" + value);    
-            }
+            // Foo();
+            Goo();
 
             Console.WriteLine("press any key to exit.");
             Console.ReadKey();
+        }
+
+        private static void Goo()
+        {
+            var value = ValueLoader.Instance.LoadLatest("005930");
+            var value2 = value.Create(58400);
+            Console.WriteLine(value);
+            Console.WriteLine(value2);
+        }
+
+        private static void Foo()
+        {
+            // var stockIds = StockLoader.Instance.Select(x => x.Code);
+            var stockIds = StockLoader.Instance.Select(x => x.Code).OrderBy(x => x).Take(1);
+            // var stockIds = new[] {"005930", "000020"};
+
+            List<Value> list = new();
+            foreach (var stockId in stockIds)
+            {
+                Print($"{StockLoader.Instance[stockId]} [{stockId}]");
+
+                try
+                {
+                    List<Value> values = ValueLoader.Instance.Load(stockId);
+                    values.RemoveAll(x => x.Year == 2022);
+                    foreach (var value in values)
+                    {
+                        value.StockCode = stockId;
+                        value.StockName = StockLoader.Instance[stockId].Name;
+
+                        Print(value.ToString());
+                    }
+
+                    list.AddRange(values);
+                }
+                catch
+                {
+                }
+            }
+
+            // JsonSerializerOptions options = new JsonSerializerOptions();
+            // options.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
+            // options.WriteIndented = true;
+            // var json = JsonSerializer.Serialize(list, options);
+            // File.WriteAllText(@"d:\Desktop\values.json", json);
+        }
+
+        private static void LoadJson()
+        {
+            var json = File.ReadAllText(@"C:\Users\thkim\Desktop\values.json");
+
+            JsonSerializerOptions options = new JsonSerializerOptions();
+            options.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
+            options.WriteIndented = true;
+
+            var list = JsonSerializer.Deserialize<List<Value>>(json, options);
+            list.RemoveAll(x => x.Year != 2021);
+            Console.WriteLine(list.Count);
+
+            Console.WriteLine("press any key to exit.");
+            Console.ReadKey();
+        }
+
+        private static void Print(string line)
+        {
+            Console.WriteLine(line);
         }
 
         private static void WriteStockCodes()

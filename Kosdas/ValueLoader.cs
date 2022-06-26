@@ -1,7 +1,8 @@
-﻿using System.Net.Http.Json;
+﻿#region
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+#endregion
 
 namespace Kosdas;
 
@@ -15,148 +16,162 @@ public class ValueLoader
     private ValueLoader()
     {
     }
-
-    private readonly HttpClient _http = new();
-
-    public List<Value> Load(string stockId, Type type = Type.Annual)
-    {
-        string key = ExtractKey(stockId);
-
-        string url = $"https://navercomp.wisereport.co.kr/v2/company/cF4002.aspx?cmp_cd={stockId}&frq=0&rpt=5&finGubun=IFRSS&frqTyp={(int)type}&cn=&encparam={key}";
-
-        var json = _http.GetStringAsync(url).Result;
-        Root root = JsonSerializer.Deserialize<Root>(json);
-        // Root root = _http.GetFromJsonAsync<Root>(url).Result;
-
-        int[] years = root.YYMM.Select(x => ParseYear(x)).Where(x => x.HasValue).Select(x => x.Value).Distinct().ToArray();
-
-        var eps = root.DATA.First(x => x.ACCNM == "EPS").ToArray();
-        var bps = root.DATA.First(x => x.ACCNM == "BPS").ToArray();
-        var cps = root.DATA.First(x => x.ACCNM == "CPS").ToArray();
-        var sps = root.DATA.First(x => x.ACCNM == "SPS").ToArray();
-        var per = root.DATA.First(x => x.ACCNM == "PER").ToArray();
-        var pbr = root.DATA.First(x => x.ACCNM == "PBR").ToArray();
-        var pcr = root.DATA.First(x => x.ACCNM == "PCR").ToArray();
-        var psr = root.DATA.First(x => x.ACCNM == "PSR").ToArray();
-        var ebitda = root.DATA.First(x => x.ACCNM == "EV/EBITDA").ToArray();
-        var dps = root.DATA.First(x => x.ACCNM == "DPS").ToArray();
-        var 현금배당수익률 = root.DATA.First(x => x.ACCNM == "현금배당수익률").ToArray();
-        var 현금배당성향 = root.DATA.First(x => x.ACCNM == "현금배당성향(%)").ToArray();
-
-        return Enumerable.Range(0, years.Length).Select(x => new Value(
-                                                     years[x],
-                                                     eps[x],
-                                                     bps[x],
-                                                     cps[x],
-                                                     sps[x],
-                                                     per[x],
-                                                     pbr[x],
-                                                     pcr[x],
-                                                     psr[x],
-                                                     ebitda[x],
-                                                     dps[x],
-                                                     현금배당수익률[x],
-                                                     현금배당성향[x]
-                                                 )).ToList();
-    }
-
-    private int? ParseYear(string text)
-    {
-        // 2017/12<br />(IFRS별도)
-        var match = Regex.Match(text, "\\d{4}").Value;
-
-        var parsed = int.TryParse(match, out int year);
-        return parsed ? year : null;
-    }
-
-    private string ExtractKey(string stockId)
-    {
-        string outerUrl = $"https://navercomp.wisereport.co.kr/v2/company/c1040001.aspx?cmp_cd={stockId}&cn=";
-        string html = _http.GetStringAsync(outerUrl).Result;
-
-        return Regex.Match(html, "encparam: '(\\w{32})'").Groups[1].Value;
-    }
-
     #endregion
 
-    public enum Type
+    private static readonly HttpClient _http = new();
+
+    public Value LoadLatest(string stockId) => Load(stockId)[^2];
+
+    public List<Value> Load(string stockId)
     {
-        Annual = 0,
-        Quarter = 1
+        var series = LoadCore(stockId, out var years).DistinctBy(x => x.Name).ToDictionary(x => x.Name, x => x.Data);
+
+        List<Value> values = new List<Value>();
+        for (int i = 0; i < years.Count; i++)
+        {
+            Value value = new Value(
+                years[i],
+                series["매출액(좌)"][i],
+                series["영업이익률"][i],
+                series["순이익률"][i],
+                series["CPS"][i],
+                series["PCR(좌)"][i],
+                series["P/C(Adj.,High)(좌)"][i],
+                series["P/C(Adj.,Low)(좌)"][i],
+                series["당기순이익(좌)"][i],
+                series["ROE"][i],
+                series["ROA"][i],
+                series["ROIC"][i],
+                series["매출액증가율"][i],
+                series["영업이익증가율"][i],
+                series["순이익증가율"][i],
+                series["총자산증가율"][i],
+                series["유동자산증가율"][i],
+                series["유형자산증가율"][i],
+                series["자기자본증가율"][i],
+                series["부채비율"][i],
+                series["유동부채비율"][i],
+                series["비유동부채비율"][i],
+                series["이자발생부채"][i],
+                series["순부채"][i],
+                series["이자보상배율(좌)"][i],
+                series["EPS"][i],
+                series["BPS"][i],
+                series["SPS"][i],
+                series["PER"][i],
+                series["PBR(좌)"][i],
+                series["PSR(좌)"][i],
+                series["총자산회전율"][i],
+                series["매출채권회전율"][i],
+                series["재고자산회전율"][i],
+                series["매입채무회전율"][i],
+                series["매출채권회전일수"][i],
+                series["재고자산회전일수"][i],
+                series["매입채무회전일수"][i],
+                series["Cash Cycle"][i],
+                series["보통주.수정주가(기말)"][i]
+            );
+            values.Add(value);
+        }
+
+        return values;
+    }
+
+    private List<Series> LoadCore(string stockId, out List<int> years)
+    {
+        years = null;
+
+        List<Series> list = new List<Series>();
+
+        List<string> urls = Enumerable.Range(1, 6).Select(x => $"https://navercomp.wisereport.co.kr/company/chart/c1030001.aspx?cmp_cd={stockId}&frq=Y&rpt={x}&finGubun=MAIN&chartType=svg").ToList();
+        urls.Add($"https://navercomp.wisereport.co.kr/company/chart/c1030001.aspx?cmp_cd{stockId}=&frq=Y&rpt=CFM&finGubun=MAIN&chartType=svg");
+
+        foreach (var url in urls)
+        {
+            var json = _http.GetStringAsync(url).Result;
+            Root root = JsonSerializer.Deserialize<Root>(json);
+            list.AddRange(root.ChartData1.Series);
+            list.AddRange(root.ChartData2.Series);
+
+            if (years == null)
+                years = root.ChartData1.Categories.Select(x => ParseYear(x)).ToList();
+        }
+
+        return list;
+    }
+
+    private int ParseYear(string text)
+    {
+        // 2017/12
+        var match = Regex.Match(text, "\\d{4}").Value;
+
+        return int.Parse(match);
     }
 
     #region records
-    private record DATum(
-        [property: JsonPropertyName("ACKIND")]
-        string ACKIND,
-        [property: JsonPropertyName("ACCODE")]
-        string ACCODE,
-        [property: JsonPropertyName("ACC_NM")]
-        string ACCNM,
-        [property: JsonPropertyName("LVL")]
-        int LVL,
-        [property: JsonPropertyName("GRP_TYP")]
-        int GRPTYP,
-        [property: JsonPropertyName("UNT_TYP")]
-        int UNTTYP,
-        [property: JsonPropertyName("P_ACCODE")]
-        string PACCODE,
-        [property: JsonPropertyName("DATA1")]
-        double? DATA1,
-        [property: JsonPropertyName("DATA2")]
-        double? DATA2,
-        [property: JsonPropertyName("DATA3")]
-        double? DATA3,
-        [property: JsonPropertyName("DATA4")]
-        double? DATA4,
-        [property: JsonPropertyName("DATA5")]
-        double? DATA5,
-        [property: JsonPropertyName("DATA6")]
-        double? DATA6,
-        [property: JsonPropertyName("YYOY")]
-        double? YYOY,
-        [property: JsonPropertyName("YEYOY")]
-        double? YEYOY,
-        [property: JsonPropertyName("DATAQ1")]
-        double? DATAQ1,
-        [property: JsonPropertyName("DATAQ4")]
-        double? DATAQ4,
-        [property: JsonPropertyName("DATAQ5")]
-        double? DATAQ5,
-        [property: JsonPropertyName("DATAQ2")]
-        double? DATAQ2,
-        [property: JsonPropertyName("DATAQ6")]
-        double? DATAQ6,
-        [property: JsonPropertyName("QOQ")]
-        double? QOQ,
-        [property: JsonPropertyName("YOY")]
-        double? YOY,
-        [property: JsonPropertyName("QOQ_COMMENT")]
-        string QOQCOMMENT,
-        [property: JsonPropertyName("YOY_COMMENT")]
-        string YOYCOMMENT,
-        [property: JsonPropertyName("QOQ_E")]
-        double? QOQE,
-        [property: JsonPropertyName("YOY_E")]
-        double? YOYE,
-        [property: JsonPropertyName("QOQ_E_COMMENT")]
-        string QOQECOMMENT,
-        [property: JsonPropertyName("YOY_E_COMMENT")]
-        string YOYECOMMENT,
-        [property: JsonPropertyName("POINT_CNT")]
-        int POINTCNT 
-    )
-    {
-        public double?[] ToArray() => new[] {DATA1, DATA2, DATA3, DATA4, DATA5, DATA6};
-    }
+    public record ChartData1(
+        [property: JsonPropertyName("series")]
+        IReadOnlyList<Series> Series,
+        [property: JsonPropertyName("categories")]
+        IReadOnlyList<string> Categories,
+        [property: JsonPropertyName("yAxis_title")]
+        IReadOnlyList<string> YAxisTitle,
+        [property: JsonPropertyName("title")]
+        string Title
+    );
 
-    private record Root(
-        [property: JsonPropertyName("YYMM")] IReadOnlyList<string> YYMM,
-        [property: JsonPropertyName("DATA")] IReadOnlyList<DATum> DATA,
-        [property: JsonPropertyName("FIN")] string FIN,
-        [property: JsonPropertyName("FRQ")] string FRQ
+    public record ChartData2(
+        [property: JsonPropertyName("series")]
+        IReadOnlyList<Series> Series,
+        [property: JsonPropertyName("categories")]
+        IReadOnlyList<string> Categories,
+        [property: JsonPropertyName("yAxis_title")]
+        IReadOnlyList<string> YAxisTitle,
+        [property: JsonPropertyName("title")]
+        string Title
+    );
+
+    public record Root(
+        [property: JsonPropertyName("chartData1")]
+        ChartData1 ChartData1,
+        [property: JsonPropertyName("chartData2")]
+        ChartData2 ChartData2
+    );
+
+    public record Series(
+        [property: JsonPropertyName("unit")]
+        string Unit,
+        [property: JsonPropertyName("name")]
+        string Name,
+        [property: JsonPropertyName("data")]
+        IReadOnlyList<double?> Data,
+        [property: JsonPropertyName("yAxis")]
+        int YAxis,
+        [property: JsonPropertyName("type")]
+        string Type
     );
     #endregion
 }
 
-public record Value(int Year, double? Eps, double? Bps, double? Cps, double? Sps, double? Per, double? Pbr, double? Pcr, double? Psr, double? EvEbitda, double? Dps, double? 현금배당수익률, double? 현금배당성향);
+public record Value(int Year, double? 매출액, double? 영업이익률, double? 순이익률, double? CPS, double? PCR, double? PCH, double? PCL, double? 당기순이익, double? ROE, double? ROA, double? ROIC, double? 매출액증가율, double? 영업이익증가율, double? 순이익증가율,
+    double? 총자산증가율, double? 유동자산증가율, double? 유형자산증가율, double? 자기자본증가율, double? 부채비율, double? 유동부채비율, double? 비유동부채비율, double? 이자발생부채, double? 순부채, double? 이자보상배율, double? EPS, double? BPS, double? SPS, double? PER, double? PBR, double? PSR,
+    double? 총자산회전율, double? 매출채권회전율, double? 재고자산회전율, double? 매입채무회전율, double? 매출채권회전일수, double? 재고자산회전일수, double? 매입채무회전일수, double? CashCycle, double? Price)
+{
+    public string StockCode { get; set; }
+    
+    public string StockName { get; set; }
+    
+    public double? Price { get; set; }
+
+    public Value Create(double price)
+    {
+        return this with
+               {
+                   PER = PER * price / Price,
+                   PBR = PBR * price / Price,
+                   PSR = PSR * price / Price,
+                   PCR = PCR * price / Price,
+                   Price = price
+               };
+    }
+}
