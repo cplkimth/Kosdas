@@ -21,11 +21,11 @@ namespace Kosdas.TestConsole
     {
         static void Main(string[] args)
         {
-            // WriteToJson();
+            WriteToJson();
             // Goo();
 
-            Strategy strategy = new Strategy();
-            strategy.Run("005930");
+            // Strategy strategy = new Strategy();
+            // strategy.Run("005930");
 
             Console.WriteLine("press any key to exit.");
             Console.ReadKey();
@@ -43,8 +43,6 @@ namespace Kosdas.TestConsole
         private static void WriteToJson()
         {
             var stockIds = StockLoader.Instance.Select(x => x.Code);
-            // var stockIds = StockLoader.Instance.Select(x => x.Code).OrderBy(x => x).Take(1);
-            // var stockIds = new[] {"005930", "000020"};
 
             List<Indicator> list = new();
             foreach (var stockId in stockIds)
@@ -74,7 +72,7 @@ namespace Kosdas.TestConsole
             options.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
             options.WriteIndented = true;
             var json = JsonSerializer.Serialize(list, options);
-            File.WriteAllText(@"d:\Desktop\values.json", json);
+            File.WriteAllText(@"d:\Desktop\indicators.json", json);
         }
 
         private static void LoadJson()
@@ -174,7 +172,7 @@ namespace Kosdas.TestConsole
 
             var query = from x in stocks
                 // 추천 레포트가 10개 이상이고 투자의견이 4.0 이상인 종목을 필터링
-                where x.ConsensusCount > 10 && x.Consensus >= 4.0M
+                where x.ConsensusCount > 10 && x.Consensus >= 4.0
                 // (현재가/목표주가) 순으로 정렬
                 orderby x.CloseOfTarget
                 select x;

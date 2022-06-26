@@ -41,14 +41,14 @@ namespace Kosdas.UnitTest
             Assert.AreEqual(20164, stock.당기순이익);
             Assert.AreEqual(3942, stock.주당순이익);
             Assert.AreEqual(1000, stock.보통주배당금);
-            Assert.AreEqual((decimal) -33.27, stock.매출액증가율);
-            Assert.AreEqual((decimal) -86.99, stock.영업이익증가율);
-            Assert.AreEqual((decimal) 50.04, stock.외국인비율);
-            Assert.AreEqual((decimal) 33.61, stock.PER);
-            Assert.AreEqual((decimal) 4.25, stock.ROE);
-            Assert.AreEqual((decimal) 3.14, stock.ROA);
-            Assert.AreEqual((decimal) 1.80, stock.PBR);
-            Assert.AreEqual((decimal) 1287.0, stock.유보율);
+            Assert.AreEqual(-33.27, stock.매출액증가율);
+            Assert.AreEqual(-86.99, stock.영업이익증가율);
+            Assert.AreEqual(50.04, stock.외국인비율);
+            Assert.AreEqual(33.61, stock.PER);
+            Assert.AreEqual(4.25, stock.ROE);
+            Assert.AreEqual(3.14, stock.ROA);
+            Assert.AreEqual(1.80, stock.PBR);
+            Assert.AreEqual(1287.0, stock.유보율);
         }
 
         [TestMethod()]

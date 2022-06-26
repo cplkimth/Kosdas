@@ -12,7 +12,7 @@ namespace Kosdas
 	/// <summary>
 	/// 실시간 가격 정보 로더. 열거 가능.
 	/// </summary>
-    public class RealTimePriceLoader : IEnumerable<KeyValuePair<string, decimal>>
+    public class RealTimePriceLoader : IEnumerable<KeyValuePair<string, double>>
 	{
 		#region singleton
 		private RealTimePriceLoader()
@@ -33,14 +33,14 @@ namespace Kosdas
 		}
 		#endregion
 
-		private ConcurrentDictionary<string, decimal> _dictionary { get; } = new();
+		private ConcurrentDictionary<string, double> _dictionary { get; } = new();
 
 		/// <summary>
 		/// 종목의 현재 가격을 반환한다.
 		/// </summary>
 		/// <param name="stockCode"></param>
 		/// <returns>현재 가격. 종목코드가 유효하지 않으면 null.</returns>
-		public decimal? this[string stockCode] => _dictionary.ContainsKey(stockCode) ? _dictionary[stockCode] : null;
+		public double? this[string stockCode] => _dictionary.ContainsKey(stockCode) ? _dictionary[stockCode] : null;
 
 		public int Count => _dictionary.Count;
 
@@ -79,7 +79,7 @@ namespace Kosdas
 		}
 
 		#region IEnumerable
-		public IEnumerator<KeyValuePair<string, decimal>> GetEnumerator()
+		public IEnumerator<KeyValuePair<string, double>> GetEnumerator()
 		{
 			foreach (var item in _dictionary)
 				yield return item;

@@ -14,8 +14,8 @@ namespace Kosdas.Models
         /// <summary>
         ///     종목 정보
         /// </summary>
-        public Stock(string Code, string Name, Market Market, decimal? 현재가, decimal? 등락률, decimal? 거래량, decimal? 시가, decimal? 고가, decimal? 저가, decimal? 시가총액, decimal? 매출액, decimal? 자산총계, decimal? 부채총계, decimal? 영업이익,
-            decimal? 당기순이익, decimal? 주당순이익, decimal? 보통주배당금, decimal? 매출액증가율, decimal? 영업이익증가율, decimal? 외국인비율, decimal? PER, decimal? ROE, decimal? ROA, decimal? PBR, decimal? 유보율)
+        public Stock(string Code, string Name, Market Market, double? 현재가, double? 등락률, double? 거래량, double? 시가, double? 고가, double? 저가, double? 시가총액, double? 매출액, double? 자산총계, double? 부채총계, double? 영업이익,
+            double? 당기순이익, double? 주당순이익, double? 보통주배당금, double? 매출액증가율, double? 영업이익증가율, double? 외국인비율, double? PER, double? ROE, double? ROA, double? PBR, double? 유보율)
         {
             this.Code = Code;
             this.Name = Name;
@@ -58,24 +58,24 @@ namespace Kosdas.Models
         ///     투자의견
         /// </summary>
         [JsonInclude]
-        public decimal? Consensus { get; private set; }
+        public double? Consensus { get; private set; }
 
         /// <summary>
         ///     목표주가
         /// </summary>
         [JsonInclude]
-        public decimal? TargetPrice { get; private set; }
+        public double? TargetPrice { get; private set; }
 
         /// <summary>
         ///     레포트 수
         /// </summary>
         [JsonInclude]
-        public decimal? ConsensusCount { get; private set; }
+        public double? ConsensusCount { get; private set; }
 
         /// <summary>
         ///     현재가 / 목표주가
         /// </summary>
-        public decimal? CloseOfTarget
+        public double? CloseOfTarget
         {
             get
             {
@@ -86,31 +86,31 @@ namespace Kosdas.Models
             }
         }
 
-        public decimal? 현재가 { get; set; }
+        public double? 현재가 { get; set; }
         public string Code { get; init; }
         public string Name { get; init; }
         public Market Market { get; init; }
-        public decimal? 등락률 { get; init; }
-        public decimal? 거래량 { get; init; }
-        public decimal? 시가 { get; init; }
-        public decimal? 고가 { get; init; }
-        public decimal? 저가 { get; init; }
-        public decimal? 시가총액 { get; init; }
-        public decimal? 매출액 { get; init; }
-        public decimal? 자산총계 { get; init; }
-        public decimal? 부채총계 { get; init; }
-        public decimal? 영업이익 { get; init; }
-        public decimal? 당기순이익 { get; init; }
-        public decimal? 주당순이익 { get; init; }
-        public decimal? 보통주배당금 { get; init; }
-        public decimal? 매출액증가율 { get; init; }
-        public decimal? 영업이익증가율 { get; init; }
-        public decimal? 외국인비율 { get; init; }
-        public decimal? PER { get; init; }
-        public decimal? ROE { get; init; }
-        public decimal? ROA { get; init; }
-        public decimal? PBR { get; init; }
-        public decimal? 유보율 { get; init; }
+        public double? 등락률 { get; init; }
+        public double? 거래량 { get; init; }
+        public double? 시가 { get; init; }
+        public double? 고가 { get; init; }
+        public double? 저가 { get; init; }
+        public double? 시가총액 { get; init; }
+        public double? 매출액 { get; init; }
+        public double? 자산총계 { get; init; }
+        public double? 부채총계 { get; init; }
+        public double? 영업이익 { get; init; }
+        public double? 당기순이익 { get; init; }
+        public double? 주당순이익 { get; init; }
+        public double? 보통주배당금 { get; init; }
+        public double? 매출액증가율 { get; init; }
+        public double? 영업이익증가율 { get; init; }
+        public double? 외국인비율 { get; init; }
+        public double? PER { get; init; }
+        public double? ROE { get; init; }
+        public double? ROA { get; init; }
+        public double? PBR { get; init; }
+        public double? 유보율 { get; init; }
 
         /// <summary>
         ///     컨센서스를 로드한다.
