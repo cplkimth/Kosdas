@@ -5,7 +5,7 @@ VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kosdas.TestConsole", "Kosdas.TestConsole\Kosdas.TestConsole.csproj", "{A94E78FD-DF0E-4F77-94C4-E6B1401A8914}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kosdas.TestWinform", "Kosdas.TestWinform\Kosdas.TestWinform.csproj", "{31E9C461-B30F-443A-8931-61B8B733055F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kosdas.TestWinform", "Kosdas.TestWinform\Kosdas.TestWinform.csproj", "{31E9C461-B30F-443A-8931-61B8B733055F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kosdas.UnitTestProject", "Kosdas.UnitTestProject\Kosdas.UnitTestProject.csproj", "{A97A65F0-48F1-4D36-9A62-98CA45D8FD33}"
 EndProject
@@ -21,7 +21,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{F102B1
 		documents\images\kosdas package icon.png = documents\images\kosdas package icon.png
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kosdas", "Kosdas\Kosdas.csproj", "{E8142607-0CF5-4AF9-BE45-3169F4C7DFB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kosdas", "Kosdas\Kosdas.csproj", "{E8142607-0CF5-4AF9-BE45-3169F4C7DFB2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataVisualizer.Contract", "..\DataVisualizer\DataVisualizer.Contract\DataVisualizer.Contract.csproj", "{82573EA2-7FF3-4910-929F-8ED4436A9A26}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{E8142607-0CF5-4AF9-BE45-3169F4C7DFB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8142607-0CF5-4AF9-BE45-3169F4C7DFB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8142607-0CF5-4AF9-BE45-3169F4C7DFB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82573EA2-7FF3-4910-929F-8ED4436A9A26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82573EA2-7FF3-4910-929F-8ED4436A9A26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82573EA2-7FF3-4910-929F-8ED4436A9A26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82573EA2-7FF3-4910-929F-8ED4436A9A26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
