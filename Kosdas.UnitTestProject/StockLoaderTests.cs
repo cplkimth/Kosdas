@@ -56,7 +56,7 @@ namespace Kosdas.UnitTest
         {
             var price = StockLoader.Instance[Models.Stock.삼성전자].LoadPrice(2021, 2, 16);
 
-            Assert.AreEqual(new DateTime(2021, 2, 16), price.Date);
+            Assert.AreEqual(new DateTime(2021, 2, 16), price.At);
             Assert.AreEqual(84500, price.Open);
             Assert.AreEqual(86000, price.High);
             Assert.AreEqual(84200, price.Low);

@@ -16,8 +16,8 @@ namespace Kosdas.UnitTest
             var prices = PriceLoader.Yahoo.Load("005930", new DateTime(2021, 2, 5), new DateTime(2021, 2, 13)).ToList();
 
             Assert.AreEqual(4, prices.Count);
-            Assert.AreEqual(new DateTime(2021, 2, 5), prices[0].Date);
-            Assert.AreEqual(new DateTime(2021, 2, 10), prices[^1].Date);
+            Assert.AreEqual(new DateTime(2021, 2, 5), prices[0].At);
+            Assert.AreEqual(new DateTime(2021, 2, 10), prices[^1].At);
             Assert.AreEqual(82500, prices[0].Low);
             Assert.AreEqual(84200, prices[1].High);
             Assert.AreEqual(84000, prices[2].Open);
@@ -37,8 +37,8 @@ namespace Kosdas.UnitTest
             var prices = PriceLoader.Yahoo.Load("005930", 2).ToList();
 
             Assert.AreEqual(2, prices.Count);
-            Assert.AreEqual(new DateTime(2021, 2, 15), prices[0].Date);
-            Assert.AreEqual(new DateTime(2021, 2, 16), prices[1].Date);
+            Assert.AreEqual(new DateTime(2021, 2, 15), prices[0].At);
+            Assert.AreEqual(new DateTime(2021, 2, 16), prices[1].At);
             Assert.AreEqual(83800, prices[0].Open);
             Assert.AreEqual(84500, prices[0].High);
             Assert.AreEqual(83300, prices[0].Low);
@@ -56,7 +56,7 @@ namespace Kosdas.UnitTest
         {
             var price = PriceLoader.Yahoo.Load("005930", 2021, 2, 16);
 
-            Assert.AreEqual(new DateTime(2021, 2, 16), price.Date);
+            Assert.AreEqual(new DateTime(2021, 2, 16), price.At);
             Assert.AreEqual(84500, price.Open);
             Assert.AreEqual(86000, price.High);
             Assert.AreEqual(84200, price.Low);
@@ -77,7 +77,7 @@ namespace Kosdas.UnitTest
         {
             var price = PriceLoader.Naver.Load(Stock.아이퀘스트, 2021, 2, 26);
 
-            Assert.AreEqual(new DateTime(2021, 2, 26), price.Date);
+            Assert.AreEqual(new DateTime(2021, 2, 26), price.At);
             Assert.AreEqual(17500, price.Open);
             Assert.AreEqual(17750, price.High);
             Assert.AreEqual(16350, price.Low);
