@@ -1,4 +1,4 @@
-﻿using DataVisualizer.Contract;
+﻿// using DataVisualizer.Contract;
 
 namespace Kosdas.Models;
 
@@ -11,7 +11,7 @@ public class MinutePrice
         Volume = volume;
     }
 
-    [Column(Format = "g")]
+    // [Column(Format = "g")]
     public DateTime At { get; init; }
     public double Close { get; init; }
     public double Volume { get; init; }
