@@ -12,15 +12,20 @@ public class NaverPriceLoader : PriceLoader
     {
     }
 
+    protected virtual PriceType PriceType => PriceType.Day;
+
     public override IEnumerable<Price> Load(string stockCode, DateTime from, DateTime to)
     {
-        string url = $"https://fchart.stock.naver.com/siseJson.nhn?symbol={stockCode}&requestType=1&startTime={from:yyyyMMdd}&endTime={to:yyyyMMdd}&timeframe=day";
+        string url = $"https://fchart.stock.naver.com/siseJson.nhn?symbol={stockCode}&requestType=1&startTime={from:yyyyMMdd}&endTime={to:yyyyMMdd}&timeframe={PriceType.ToString().ToLower()}";
 
         WebClient web = new WebClient();
         web.Encoding = Encoding.UTF8;
 
         var text = web.DownloadString(url).Split('\n');
         var lines = text.Where(x => x.StartsWith("[\""));
+
+        if (PriceType == PriceType.Minute)
+            lines = lines.Reverse();
 
         return lines.Select(ParsePrice);
     }
@@ -32,13 +37,19 @@ public class NaverPriceLoader : PriceLoader
 
         var tokens = line.Split(',');
 
+        return ParsePriceCore(tokens);
+    }
+
+    protected virtual Price ParsePriceCore(string[] tokens)
+    {
         return new Price(
+            PriceType, 
             DateTime.ParseExact(tokens[0], "yyyyMMdd", null),
+            Convert.ToDouble(tokens[4]),
+            Convert.ToDouble(tokens[5]),
             Convert.ToDouble(tokens[1]),
             Convert.ToDouble(tokens[2]),
-            Convert.ToDouble(tokens[3]),
-            Convert.ToDouble(tokens[4]),
-            Convert.ToDouble(tokens[5])
+            Convert.ToDouble(tokens[3])
         );
     }
 }

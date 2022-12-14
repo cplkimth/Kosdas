@@ -47,12 +47,13 @@ public class YahooPriceLoader : PriceLoader
             return null;
 
         return new Price(
+            PriceType.Day, 
             DateTime.Parse(tokens[0]),
+            Convert.ToDouble(tokens[4]),
+            Convert.ToDouble(tokens[6]),
             Convert.ToDouble(tokens[1]),
             Convert.ToDouble(tokens[2]),
-            Convert.ToDouble(tokens[3]),
-            Convert.ToDouble(tokens[4]),
-            Convert.ToDouble(tokens[6])
+            Convert.ToDouble(tokens[3])
         );
     }
 }

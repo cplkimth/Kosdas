@@ -21,6 +21,12 @@ class Program
 {
     static void Main(string[] args)
     {
+        // var prices = PriceLoader.Naver.Load("005930", DateTime.Today.AddDays(-7), DateTime.Today);
+        var prices = PriceLoader.Minute.Load("005930", DateTime.Today.AddDays(-7), DateTime.Today);
+        foreach (var price in prices)
+            Console.WriteLine(price);
+
+        return;
         StockLoader.Instance.Load();
         StockLoader.Instance.AsParallel().ForAll(x => IndicatorLoader.Instance.LoadLatest(x.Code));
         WriteToJson();

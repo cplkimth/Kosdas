@@ -60,6 +60,23 @@ public abstract partial class PriceLoader
     }
     #endregion
 
+    #region Minute
+    private static PriceLoader _minute;
+
+    /// <summary>
+    /// 네이버 가격정보 로더
+    /// </summary>
+    public static PriceLoader Minute
+    {
+        get
+        {
+            if (_minute == null)
+                _minute = new MinutePriceLoader();
+            return _minute;
+        }
+    }
+    #endregion
+
     protected abstract Price ParsePrice(string line);
 
     /// <summary>

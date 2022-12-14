@@ -4,41 +4,18 @@ using System.Text;
 
 namespace Kosdas;
 
-public class MinutePriceLoader
+public class MinutePriceLoader : NaverPriceLoader
 {
-    #region singleton
-    private static readonly Lazy<MinutePriceLoader> _instance = new(() => new MinutePriceLoader());
-
-    public static MinutePriceLoader Instance => _instance.Value;
-
-    private MinutePriceLoader()
+    internal MinutePriceLoader()
     {
     }
-    #endregion
 
-    public IEnumerable<MinutePrice> Load(string stockCode, DateTime date) => Load(stockCode, date, date);
+    protected override PriceType PriceType => PriceType.Minute;
 
-    public IEnumerable<MinutePrice> Load(string stockCode, DateTime from, DateTime to)
+    protected override Price ParsePriceCore(string[] tokens)
     {
-        string url = $"https://fchart.stock.naver.com/siseJson.nhn?symbol={stockCode}&requestType=1&startTime={from:yyyyMMdd}&endTime={to:yyyyMMdd}&timeframe=minute";
-
-        WebClient web = new WebClient();
-        web.Encoding = Encoding.UTF8;
-
-        var text = web.DownloadString(url).Split('\n');
-        var lines = text.Where(x => x.StartsWith("[\""));
-
-        return lines.Select(ParsePrice).Reverse();
-    }
-
-    protected MinutePrice ParsePrice(string line)
-    {
-        line = line.Trim().Substring(2, line.Length - 4);
-        line = line.Replace("\"", string.Empty);
-
-        var tokens = line.Split(',');
-
-        return new MinutePrice(
+        return new Price(
+            PriceType, 
             DateTime.ParseExact(tokens[0], "yyyyMMddHHmm", null),
             Convert.ToDouble(tokens[4]),
             Convert.ToDouble(tokens[5])

@@ -3,21 +3,18 @@
 /// <summary>
 ///     가격 정보
 /// </summary>
-public class Price : MinutePrice
+public record Price(PriceType PriceType, DateTime At, double Close, double Volume = 0, double Open = 0, double High = 0, double Low = 0)
 {
-    /// <summary>
-    ///     가격 정보
-    /// </summary>
-    public Price(DateTime at, double open, double high, double low, double close, double volume) : base(at, close, volume)
+    public override string ToString() => PriceType switch
     {
-        Open = open;
-        High = high;
-        Low = low;
-    }
+        PriceType.Day => $"[{At:yyMMdd}] {Open:N0} -> {Close:N0}",
+        PriceType.Minute => $"[{At:yyMMdd HH:mm}] {Close:N0}",
+        _ => throw new ArgumentOutOfRangeException()
+    };
+}
 
-    public double Open { get; init; }
-    public double High { get; init; }
-    public double Low { get; init; }
-
-    public override string ToString() => $"[{At:d}] {Open:N0} -> {Close:N0}";
+public enum PriceType
+{
+    Day,
+    Minute
 }
