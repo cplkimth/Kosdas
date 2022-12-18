@@ -34,7 +34,17 @@ public class IndicatorLoader
 
     private static readonly HttpClient _http = new();
 
-    public Indicator LoadLatest(string stockId) => Load(stockId)[^2];
+    public Indicator LoadLatest(string stockId)
+    {
+        try
+        {
+            return Load(stockId)[^2];
+        }
+        catch
+        {
+            return null;
+        }
+    }
 
     public List<Indicator> Load(string stockId)
     {
@@ -117,10 +127,17 @@ public class IndicatorLoader
 
     private int ParseYear(string text)
     {
-        // 2017/12
-        var match = Regex.Match(text, "\\d{4}").Value;
+        try
+        {
+// 2017/12
+            var match = Regex.Match(text, "\\d{4}").Value;
 
-        return int.Parse(match);
+            return int.Parse(match);
+        }
+        catch
+        {
+            return 0;
+        }
     }
 
     private static void RemoveDuplicates(List<Indicator> list)
