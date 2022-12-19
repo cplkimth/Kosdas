@@ -23,8 +23,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{F102B1
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kosdas", "Kosdas\Kosdas.csproj", "{E8142607-0CF5-4AF9-BE45-3169F4C7DFB2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataVisualizer.Contract", "..\DataVisualizer\DataVisualizer.Contract\DataVisualizer.Contract.csproj", "{82573EA2-7FF3-4910-929F-8ED4436A9A26}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,10 +45,6 @@ Global
 		{E8142607-0CF5-4AF9-BE45-3169F4C7DFB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8142607-0CF5-4AF9-BE45-3169F4C7DFB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8142607-0CF5-4AF9-BE45-3169F4C7DFB2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{82573EA2-7FF3-4910-929F-8ED4436A9A26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{82573EA2-7FF3-4910-929F-8ED4436A9A26}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{82573EA2-7FF3-4910-929F-8ED4436A9A26}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{82573EA2-7FF3-4910-929F-8ED4436A9A26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
