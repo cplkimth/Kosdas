@@ -48,12 +48,12 @@ namespace Kosdas
         /// <summary>
         ///     https://finance.naver.com/sise/sise_market_sum.nhn?sosok=0&page=32 의 마지막 페이지
         /// </summary>
-        private const int MaxPageForKospi = 32;
+        private const int MaxPageForKospi = 43;
 
         /// <summary>
         ///     https://finance.naver.com/sise/sise_market_sum.nhn?sosok=1&page=30 의 마지막 페이지
         /// </summary>
-        private const int MaxPageForKosdaq = 30;
+        private const int MaxPageForKosdaq = 35;
 
         private static int DictionaryCapacity => (MaxPageForKospi + MaxPageForKosdaq) * ItemsPerPage;
 

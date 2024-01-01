@@ -21,6 +21,9 @@ class Program
 {
     static void Main(string[] args)
     {
+        StockLoader.Instance.Load();
+        var stocks = StockLoader.Instance.ToList();
+
         var sources = IndicatorLoader.Instance.LoadLatest("005930");
         return;
 
