@@ -76,9 +76,9 @@ namespace Kosdas.UnitTest
             var stock = StockLoader.Instance[Models.Stock.메리츠증권];
             stock.LoadConsensus();
 
-            Assert.AreEqual(3.71M, stock.Consensus);
-            Assert.AreEqual(4443M, stock.TargetPrice);
-            Assert.AreEqual(7M, stock.ConsensusCount);
+            Assert.AreEqual(3.71, stock.Consensus);
+            Assert.AreEqual(4443, stock.TargetPrice);
+            Assert.AreEqual(7, stock.ConsensusCount);
         }
 
         [TestMethod()]

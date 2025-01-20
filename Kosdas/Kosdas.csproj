@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
@@ -31,7 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AsyncMethodLibrary" Version="1.0.3" />
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.57" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.72" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
